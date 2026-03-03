@@ -1,6 +1,5 @@
 package com.swapstyle.swapstyle.entity;
 
-
 import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import com.swapstyle.swapstyle.entity.enums.Category;
@@ -16,9 +15,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -44,7 +43,7 @@ public class Article {
     private String size;
 
     @NotNull(message = "Price is required")
-    @DecimalMin(value = "0.01", message = "Price must be at least 0.01")
+    @PositiveOrZero
     private Double price;
 
     @Enumerated(EnumType.STRING)
