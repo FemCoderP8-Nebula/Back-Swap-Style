@@ -1,13 +1,13 @@
 package com.swapstyle.swapstyle.service;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import com.swapstyle.swapstyle.dto.request.LoginRequestDTO;
 import com.swapstyle.swapstyle.dto.request.RegisterRequestDTO;
 import com.swapstyle.swapstyle.dto.request.UserUpdateDTO;
 import com.swapstyle.swapstyle.dto.response.UserProfileResponseDTO;
 import com.swapstyle.swapstyle.entity.User;
-
 import com.swapstyle.swapstyle.repository.UserRepository;
 
 @Service
@@ -20,7 +20,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User createUser(RegisterRequestDTO dto) {
+    public UserProfileResponseDTO userRegister(RegisterRequestDTO dto) {
         User user = new User();
         user.setUserName(dto.userName());
         user.setEmail(dto.email());
@@ -28,7 +28,15 @@ public class UserServiceImpl implements UserService {
         user.setAvatar(dto.avatar());
         user.setRole(dto.role());
 
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+
+        return new UserProfileResponseDTO(
+            savedUser.getIdUser(),
+            savedUser.getUserName(),
+            savedUser.getEmail(),
+            savedUser.getAvatar(),
+            savedUser.getRole()
+        );
     }
 
     @Override
@@ -82,6 +90,13 @@ public class UserServiceImpl implements UserService {
             updatedUser.getAvatar(),
             updatedUser.getRole()
         );
+    }
+
+    @Override
+    public  void deleteUser(Integer id) {
+        if(!userRepository.existsById(id)){
+            throw new RuntimeException("User not found");
+        } userRepository.deleteById(id);
     }
 
 }
