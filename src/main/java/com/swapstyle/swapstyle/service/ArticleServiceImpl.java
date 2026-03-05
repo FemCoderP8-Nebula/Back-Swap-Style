@@ -1,46 +1,58 @@
-// package com.swapstyle.swapstyle.service;
+package com.swapstyle.swapstyle.service;
 
-// import java.util.List;
+import java.util.List;
 
-// import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Service;
 
-// import com.swapstyle.swapstyle.entity.Article;
-// import com.swapstyle.swapstyle.entity.User;
-// import com.swapstyle.swapstyle.repository.ArticleRepository;
+import com.swapstyle.swapstyle.dto.request.ArticleRequestDTO;
+import com.swapstyle.swapstyle.entity.Article;
+import com.swapstyle.swapstyle.repository.ArticleRepository;
 
+import lombok.RequiredArgsConstructor;
 
-// @Service
-// public class ArticleServiceImpl implements ArticleService {
+@Service
+@RequiredArgsConstructor
+public class ArticleServiceImpl implements ArticleService {
 
-//     private final ArticleRepository articleRepository;
+    private final ArticleRepository articleRepository;
 
-//     private final UserService userService;
+    @Override
+    public Article createArticle(ArticleRequestDTO dto) {
+        Article article = new Article();
+        article.setTitle(dto.title());
+        article.setDescription(dto.description());
+        article.setSize(dto.size());
+        article.setPrice(dto.price());
+        article.setCategory(dto.category());
+        article.setState(dto.state());
+        article.setImage(dto.image());
 
-//     @Override
-//     public Article createArticle(Article article, Integer idUser) {
-//         User user = userService.getUserById(idUser);
-//         return articleRepository.save(article);
-       
-//     }
+        return articleRepository.save(article);
 
-//     @Override
-//     public List<Article> getAllArticles() {
-       
-//     }
+    }
 
-//     @Override
-//     public Article deleArticle(Integer idArticle) {
-     
-//     }
-//     @Override
-//     public Article updateArticle(Article article) {
-    
-//     }
+    // @Override
+    // public List<Article> getAllArticles() {
+    //     // TODO Auto-generated metho ararticleRepositoryd stub
+    //     throw new UnsupportedOperationException("Unimplemented method 'getAllArticles'");
+    // }
 
-//     @Override
-//     public Article getDetail(Integer id) {
-//         // TODO Auto-generated method stub
-//         throw new UnsupportedOperationException("Unimplemented method 'getDetail'");
-//     }
+    // @Override
+    // public Article getDetail(Integer id) {
+    //     // TODO Auto-generated method stub
+    //     throw new UnsupportedOperationException("Unimplemented method 'getDetail'");
+    // }
 
-// }
+    // @Override
+    // public Article deleteArticle(Integer id) {
+    //     // TODO Auto-generated method stub
+    //     throw new UnsupportedOperationException("Unimplemented method 'deleteArticle'");
+    // }
+
+    // @Override
+    // public Article updateArticle(Article article) {
+    //     // TODO Auto-generated method stub
+    //     throw new UnsupportedOperationException("Unimplemented method 'updateArticle'");
+    // }
+
+}
