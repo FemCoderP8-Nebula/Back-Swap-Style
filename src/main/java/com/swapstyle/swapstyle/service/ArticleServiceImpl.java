@@ -8,13 +8,18 @@ import com.swapstyle.swapstyle.dto.request.ArticleRequestDTO;
 import com.swapstyle.swapstyle.entity.Article;
 import com.swapstyle.swapstyle.repository.ArticleRepository;
 
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 
+import com.swapstyle.swapstyle.dto.response.ArticleCardReponseDTO;
+
+@AllArgsConstructor
 @Service
-@RequiredArgsConstructor
 public class ArticleServiceImpl implements ArticleService {
 
     private final ArticleRepository articleRepository;
+    // private final UserService userService;
+
+     
 
     @Override
     public Article createArticle(ArticleRequestDTO dto) {
@@ -31,11 +36,23 @@ public class ArticleServiceImpl implements ArticleService {
 
     }
 
-    // @Override
-    // public List<Article> getAllArticles() {
-    //     // TODO Auto-generated metho ararticleRepositoryd stub
-    //     throw new UnsupportedOperationException("Unimplemented method 'getAllArticles'");
-    // }
+     @Override
+    public List<ArticleCardReponseDTO> getAllArticles() {
+        List<Article> article = articleRepository.findAll();
+        return article.stream()
+        .map(a -> new ArticleCardReponseDTO(
+            a.getTitle(),
+            a.getSize(),
+            a.getPrice(),
+            a.getCategory(),
+            a.getState(),
+            a.getImage(),
+            a.getPublished(),
+            a.getUserOffers().getUserName()
+        ))
+        .toList();
+    }
+
 
     // @Override
     // public Article getDetail(Integer id) {
@@ -55,4 +72,6 @@ public class ArticleServiceImpl implements ArticleService {
     //     throw new UnsupportedOperationException("Unimplemented method 'updateArticle'");
     // }
 
+    
 }
+ 

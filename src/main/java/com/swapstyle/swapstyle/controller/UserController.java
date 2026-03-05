@@ -11,6 +11,7 @@ import com.swapstyle.swapstyle.entity.User;
 import com.swapstyle.swapstyle.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,9 +29,9 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> createUser(@RequestBody RegisterRequestDTO dto) {
-        User user = userService.createUser(dto);
-        return new ResponseEntity<>(user, HttpStatus.CREATED);
+    public ResponseEntity<UserProfileResponseDTO> createUser(@RequestBody RegisterRequestDTO dto) {
+        UserProfileResponseDTO response = userService.userRegister(dto);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
@@ -57,9 +58,9 @@ public class UserController {
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 
-    // @DeleteMapping("/{id}")
-    // public ResponseEntity<Void> delete(@PathVariable Integer id) {
-    // userService.deleteUser(id);
-    // return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    // }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+    userService.deleteUser(id);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

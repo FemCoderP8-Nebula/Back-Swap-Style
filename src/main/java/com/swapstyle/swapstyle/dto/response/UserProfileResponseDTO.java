@@ -4,7 +4,7 @@ import com.swapstyle.swapstyle.entity.enums.Avatar;
 import com.swapstyle.swapstyle.entity.enums.Role;
 
 public record UserProfileResponseDTO(
-    Integer Id,
+    Integer id,
     String userName,
     String email,
     Avatar avatar,
