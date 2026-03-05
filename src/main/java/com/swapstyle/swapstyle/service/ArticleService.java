@@ -6,11 +6,13 @@ import com.swapstyle.swapstyle.entity.Article;
 
 public interface ArticleService {
 
-public Article createArticle(Article article, Integer idUser );
+public Article createArticle(Article article, Integer id );
 
 public List <Article>getAllArticles();
 
-public Article deleArticle(Integer idArticle);
+public Article getDetail ( Integer id);
+
+public Article deleArticle(Integer id);
 
 public Article updateArticle(Article article);
 

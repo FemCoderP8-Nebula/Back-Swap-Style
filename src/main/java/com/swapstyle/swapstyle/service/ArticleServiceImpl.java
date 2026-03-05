@@ -37,4 +37,10 @@ public class ArticleServiceImpl implements ArticleService {
     
     }
 
+    @Override
+    public Article getDetail(Integer id) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getDetail'");
+    }
+
 }
