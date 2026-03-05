@@ -54,7 +54,8 @@ public class Article {
     @NotNull(message = "Select a state of article")
     private State state;
 
-    @NotBlank(message = "Add your photo here.")
+    // @NotBlank(message = "Add your photo here.") irá en dto
+    @Column(nullable = false)
     private String image;
 
     @CreationTimestamp
