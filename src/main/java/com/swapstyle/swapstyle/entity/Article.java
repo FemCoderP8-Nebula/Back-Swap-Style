@@ -24,42 +24,42 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class Article {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idArticle;
 
-    @Column(length = 50)
-    private String title;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer idArticle;
 
-    @Column(length = 250)
-    private String description;
+  @Column(length = 50)
+  private String title;
 
-    @Column(length = 20)
-    private String size;
+  @Column(length = 250)
+  private String description;
 
-    @PositiveOrZero
-    private Double price;
+  @Column(length = 20)
+  private String size;
 
-    @Enumerated(EnumType.STRING)
-    private Category category;
+  @PositiveOrZero
+  private Double price;
 
-    @Enumerated(EnumType.STRING)
-    private State state;
+  @Enumerated(EnumType.STRING)
+  private Category category;
 
-    @Column(nullable = false)
-    private String image;
+  @Enumerated(EnumType.STRING)
+  private State state;
+
+  @Column(nullable = false)
+  private String image;
 
     @CreationTimestamp
-    private LocalDateTime published;
+  private LocalDateTime published;
 
-    @Column(nullable = false)
-    private Boolean isReserved = false;
+  @Column(nullable = false)
+  private Boolean isReserved = false;
 
-    @ManyToOne
-    @JoinColumn(name = "user_offers_id", nullable = false, referencedColumnName = "idUser")
-    private User userOffers;
+  @ManyToOne
+  @JoinColumn(name = "user_offers_id", nullable = false, referencedColumnName = "idUser")
+  private User userOffers;
 
-    @OneToOne(mappedBy = "article")
-    private Reserve reserve;
+  @OneToOne(mappedBy = "article")
+  private Reserve reserve;
 }
