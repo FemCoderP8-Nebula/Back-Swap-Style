@@ -1,11 +1,11 @@
 package com.swapstyle.swapstyle.entity;
 
-import com.swapstyle.swapstyle.entity.enums.Role;
-
 import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.swapstyle.swapstyle.entity.enums.Role;
 import com.swapstyle.swapstyle.entity.enums.Avatar;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,9 +15,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -31,24 +28,25 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idUser;
 
-    @NotBlank(message = "User name is required")
+    @Column(nullable = false, length = 50)
     private String userName;
 
-    @NotBlank(message = "Email is required")
-    @Email(message = "Invalid email")
-    @Column(unique = true)
+    @Column(nullable = false, unique = true)
     private String email;
+
+    @Column(nullable = false)
+    private String password;
     
     @Enumerated(EnumType.STRING)
-    @NotNull(message = "Select a Avatar")
+    @Column(nullable = false)
     private Avatar avatar;
 
-    @NotNull(message = "Select role")
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Role role;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "userOffers")
+    @OneToMany(mappedBy = "userOffers", cascade = CascadeType.ALL)
     private List<Article> articles;
     
 }
