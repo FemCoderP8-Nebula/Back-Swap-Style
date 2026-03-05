@@ -15,8 +15,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,37 +29,31 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idArticle;
 
-    @NotBlank(message = "Title is required, maximun 50 characters.")
-      @Column(length = 50)
+    @Column(length = 50)
     private String title;
 
-    @NotBlank(message = "Description required, maximun 250 characters.")
     @Column(length = 250)
     private String description;
 
-    @NotBlank(message = "Size is required")
+    @Column(length = 20)
     private String size;
 
-    @NotNull(message = "Price is required")
     @PositiveOrZero
     private Double price;
 
     @Enumerated(EnumType.STRING)
-    @NotNull(message = "Select a Category")
     private Category category;
 
     @Enumerated(EnumType.STRING)
-    @NotNull(message = "Select a state of article")
     private State state;
 
-    // @NotBlank(message = "Add your photo here.") irá en dto
     @Column(nullable = false)
     private String image;
 
     @CreationTimestamp
     private LocalDateTime published;
 
-    @NotNull
+    @Column(nullable = false)
     private Boolean isReserved = false;
 
     @ManyToOne

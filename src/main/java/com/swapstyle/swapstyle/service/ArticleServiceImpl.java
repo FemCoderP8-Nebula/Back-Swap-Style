@@ -16,25 +16,20 @@ public class ArticleServiceImpl implements ArticleService {
 
     private final UserService userService;
 
+    public ArticleServiceImpl(ArticleRepository articleRepository){
+        this.articleRepository = articleRepository;
+    }
+
     @Override
-    public Article createArticle(Article article, Integer idUser) {
-        User user = userService.getUserById(idUser);
-        return articleRepository.save(article);
-       
+    public Article createArticle(Article article, Integer id) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'createArticle'");
     }
 
     @Override
     public List<Article> getAllArticles() {
-       
-    }
-
-    @Override
-    public Article deleArticle(Integer idArticle) {
-     
-    }
-    @Override
-    public Article updateArticle(Article article) {
-    
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAllArticles'");
     }
 
     @Override
@@ -42,5 +37,19 @@ public class ArticleServiceImpl implements ArticleService {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getDetail'");
     }
+
+    @Override
+    public Article deleArticle(Integer id) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'deleArticle'");
+    }
+
+    @Override
+    public Article updateArticle(Article article) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'updateArticle'");
+    }
+
+
 
 }
