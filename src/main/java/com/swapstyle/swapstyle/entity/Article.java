@@ -15,7 +15,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
@@ -26,48 +25,42 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class Article {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idArticle;
 
-    @NotBlank(message = "Title is required, maximun 50 characters.")
-      @Column(length = 50)
-    private String title;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer idArticle;
 
-    @NotBlank(message = "Description required, maximun 250 characters.")
-    @Column(length = 250)
-    private String description;
+  @Column(length = 50)
+  private String title;
 
-    @NotBlank(message = "Size is required")
-    private String size;
+  @Column(length = 250)
+  private String description;
 
-    @NotNull(message = "Price is required")
-    @PositiveOrZero
-    private Double price;
+  private String size;
 
-    @Enumerated(EnumType.STRING)
-    @NotNull(message = "Select a Category")
-    private Category category;
+  @PositiveOrZero
+  private Double price;
 
-    @Enumerated(EnumType.STRING)
-    @NotNull(message = "Select a state of article")
-    private State state;
+  @Enumerated(EnumType.STRING)
+  
+  private Category category;
 
-    // @NotBlank(message = "Add your photo here.") irá en dto
-    @Column(nullable = false)
-    private String image;
+  @Enumerated(EnumType.STRING)
+  private State state;
 
-    @CreationTimestamp
-    private LocalDateTime published;
+  // @NotBlank(message = "Add your photo here.")
+  private String image;
 
-    @NotNull
-    private Boolean isReserved = false;
+  @CreationTimestamp
+  private LocalDateTime published;
 
-    @ManyToOne
-    @JoinColumn(name = "user_offers_id", nullable = false, referencedColumnName = "idUser")
-    private User userOffers;
+  @NotNull
+  private Boolean isReserved = false;
 
-    @OneToOne(mappedBy = "article")
-    private Reserve reserve;
+  @ManyToOne
+  @JoinColumn(name = "user_offers_id", nullable = false, referencedColumnName = "idUser")
+  private User userOffers;
+
+  @OneToOne(mappedBy = "article")
+  private Reserve reserve;
 }
