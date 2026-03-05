@@ -8,7 +8,7 @@ import com.swapstyle.swapstyle.entity.Article;
 
 public interface ArticleService {
 
-public Article createArticle(ArticleRequestDTO dto );
+public Article createArticle(ArticleRequestDTO dto, Integer idUser );
 
 public List<ArticleCardReponseDTO> getAllArticles();
 

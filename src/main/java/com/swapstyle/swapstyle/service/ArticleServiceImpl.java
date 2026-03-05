@@ -6,23 +6,29 @@ import org.springframework.stereotype.Service;
 
 import com.swapstyle.swapstyle.dto.request.ArticleRequestDTO;
 import com.swapstyle.swapstyle.entity.Article;
+import com.swapstyle.swapstyle.entity.User;
 import com.swapstyle.swapstyle.repository.ArticleRepository;
-
-import lombok.AllArgsConstructor;
-
 import com.swapstyle.swapstyle.dto.response.ArticleCardReponseDTO;
 
-@AllArgsConstructor
+
 @Service
 public class ArticleServiceImpl implements ArticleService {
 
     private final ArticleRepository articleRepository;
-    // private final UserService userService;
 
+    private final UserService userService;
+
+    public ArticleServiceImpl(ArticleRepository articleRepository, UserService userService){
+        this.articleRepository = articleRepository;
+       this.userService= userService;
+    }
      
 
     @Override
-    public Article createArticle(ArticleRequestDTO dto) {
+    public Article createArticle(ArticleRequestDTO dto, Integer idUser) {
+
+        User user = userService.getUserById(idUser);
+        
         Article article = new Article();
         article.setTitle(dto.title());
         article.setDescription(dto.description());
@@ -31,6 +37,7 @@ public class ArticleServiceImpl implements ArticleService {
         article.setCategory(dto.category());
         article.setState(dto.state());
         article.setImage(dto.image());
+        article.setUserOffers(user);
 
         return articleRepository.save(article);
 
