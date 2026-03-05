@@ -1,10 +1,9 @@
 package com.swapstyle.swapstyle.dto.response;
 
-import java.lang.Thread.State;
-import java.time.LocalDateTime;
 
-import com.swapstyle.swapstyle.entity.User;
+import java.time.LocalDateTime;
 import com.swapstyle.swapstyle.entity.enums.Category;
+import com.swapstyle.swapstyle.entity.enums.State;
 
 public record ArticleCardReponseDTO(
     String title,
@@ -14,8 +13,7 @@ public record ArticleCardReponseDTO(
     State state,
     String image,
     LocalDateTime published,
-    User userOffers
+    String sellerName
 ) {
-
    
 }
