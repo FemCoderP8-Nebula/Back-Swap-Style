@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 import com.swapstyle.swapstyle.dto.response.ArticleCardReponseDTO;
 import com.swapstyle.swapstyle.entity.Article;
 import com.swapstyle.swapstyle.repository.ArticleRepository;
-// import java.time.LocalDateTime;
-// import com.swapstyle.swapstyle.entity.enums.Category;
-// import com.swapstyle.swapstyle.entity.enums.State;
+import java.time.LocalDateTime;
+import com.swapstyle.swapstyle.entity.enums.Category;
+import com.swapstyle.swapstyle.entity.enums.State;
 
 
 @Service
@@ -41,6 +41,26 @@ public class ArticleServiceImpl implements ArticleService {
         .toList();
     }
 
-
+    @Override
+    public List<ArticleCardReponseDTO> findByCategory(Category category) {
+        List<Article> articles = articleRepository.findByCategory(category);
+        if (articles.isEmpty()){
+            throw new RuntimeException("No existen artículos para la categoría seleccionada");
+        }
+        return articles.stream()
+        .map(article -> new ArticleCardReponseDTO(
+            article.getTitle(),
+            article.getSize(),
+            article.getPrice(),
+            article.getCategory(),
+            article.getState(),
+            article.getImage(),
+            article.getPublished(),
+            article.getUserOffers().getUserName()
+        ))
+        .toList();
+    }
+//COLLECTOR
+//OPTIONAL
 
  }
