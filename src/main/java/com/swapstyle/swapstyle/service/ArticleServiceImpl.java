@@ -1,5 +1,6 @@
 package com.swapstyle.swapstyle.service;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import com.swapstyle.swapstyle.repository.ArticleRepository;
 //import java.time.LocalDateTime;
 import com.swapstyle.swapstyle.entity.enums.Category;
 //import com.swapstyle.swapstyle.entity.enums.State;
+import com.swapstyle.swapstyle.entity.enums.PublishedRange;
 
 @Service
 public class ArticleServiceImpl implements ArticleService {
@@ -66,4 +68,35 @@ public class ArticleServiceImpl implements ArticleService {
     // COLLECTOR
     // OPTIONAL
 
+    @Override
+    public List<ArticleCardReponseDTO> findByPublishedRange(PublishedRange range) {
+        LocalDateTime now = LocalDateTime.now();
+        List<Article> articles = articleRepository.findAll();
+
+        return articles.stream()
+                .filter(a -> {
+                    LocalDateTime published = a.getPublished();
+
+                    return switch (range) {
+                        case LAST_24HS -> published.isAfter(now.minusHours(24));
+                        case LAST_WEEK -> published.isAfter(now.minusWeeks(1));
+                        case LAST_MONTH -> published.isAfter(now.minusMonths(1));
+                        case OLDERS -> published.isBefore(now.minusMonths(1));
+                    };
+                })
+                .sorted(Comparator.comparing(Article::getPublished).reversed())
+                .map(a -> new ArticleCardReponseDTO(
+                        a.getTitle(),
+                        a.getSize(),
+                        a.getPrice(),
+                        a.getCategory(),
+                        a.getState(),
+                        a.getImage(),
+                        a.getPublished(),
+                        a.getUserOffers().getUserName()))
+                .toList();
+    }
+
+    //LLAMO AL FIND ALL... GASTO INNECESARIO?
+    //.map mapper??
 }
