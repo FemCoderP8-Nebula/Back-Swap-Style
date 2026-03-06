@@ -99,10 +99,6 @@ public class UserServiceImpl implements UserService {
         } userRepository.deleteById(id);
     }
 
-    @Override
-    public User getUserById(Integer idUser) {
-       return userRepository.findById(idUser)
-            .orElseThrow(() -> new RuntimeException("User not found with id: " + idUser));
-    }
+
 
 }
