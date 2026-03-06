@@ -2,7 +2,10 @@ package com.swapstyle.swapstyle.entity;
 
 import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,21 +29,23 @@ public class Reserve {
     private Integer idReserve;
 
     @CreationTimestamp
+    @Column(updatable = false, nullable = false)
     private LocalDateTime reservationDate;
 
+    @Column(nullable = false)
     private LocalDateTime expiryDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_want_id", nullable = false, referencedColumnName = "idUser")
+    private User userWants;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "article_id", unique = true, nullable = false, referencedColumnName = "idArticle")
+    private Article article;
 
     @PrePersist
     protected void onCreate(){
         this.expiryDate = LocalDateTime.now().plusHours(24);
     }
-
-    @ManyToOne
-    @JoinColumn(name = "user_want_id", nullable = false, referencedColumnName = "idUser")
-    private User userWants;
-
-    @OneToOne
-    @JoinColumn(name = "article_id", unique = true, nullable = false, referencedColumnName = "idArticle")
-    private Article article;
 
 }
