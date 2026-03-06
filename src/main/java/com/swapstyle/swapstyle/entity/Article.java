@@ -15,7 +15,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -36,25 +35,25 @@ public class Article {
   @Column(length = 250)
   private String description;
 
+  @Column(length = 20)
   private String size;
 
   @PositiveOrZero
   private Double price;
 
   @Enumerated(EnumType.STRING)
-  
   private Category category;
 
   @Enumerated(EnumType.STRING)
   private State state;
 
-  // @NotBlank(message = "Add your photo here.")
+  @Column(nullable = false)
   private String image;
 
-  @CreationTimestamp
+    @CreationTimestamp
   private LocalDateTime published;
 
-  @NotNull
+  @Column(nullable = false)
   private Boolean isReserved = false;
 
   @ManyToOne

@@ -27,6 +27,7 @@ State state,
 
 @NotBlank(message = "Add your photo here.")
 String image
+
 ) {
 
 }
