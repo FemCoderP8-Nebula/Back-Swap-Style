@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.swapstyle.swapstyle.dto.response.ArticleCardReponseDTO;
 import com.swapstyle.swapstyle.entity.enums.Category;
+import com.swapstyle.swapstyle.entity.enums.PublishedRange;
 import com.swapstyle.swapstyle.service.ArticleService;
 
 import java.util.List;
@@ -37,7 +38,13 @@ public class ArticleController {
         List<ArticleCardReponseDTO> articles = articleService.findByCategory(category);
         return new ResponseEntity<>(articles, HttpStatus.OK);
     }
+
     
+    @GetMapping("/articlesByPublishedRange")
+    public ResponseEntity<List<ArticleCardReponseDTO>> findByPublishedRange(@RequestParam PublishedRange range) {
+        List<ArticleCardReponseDTO> articles = articleService.findByPublishedRange(range);
+        return new ResponseEntity<>(articles, HttpStatus.OK);
+    }
     
 
 }

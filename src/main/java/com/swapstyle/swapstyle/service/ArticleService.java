@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.swapstyle.swapstyle.dto.response.ArticleCardReponseDTO;
 import com.swapstyle.swapstyle.entity.enums.Category;
+import com.swapstyle.swapstyle.entity.enums.PublishedRange;
 
 public interface ArticleService {
 
@@ -19,5 +20,7 @@ public interface ArticleService {
 public List<ArticleCardReponseDTO> getAllArticles();
 
 public List<ArticleCardReponseDTO> findByCategory(Category category);
+
+public List<ArticleCardReponseDTO> findByPublishedRange(PublishedRange range);
 
 }
