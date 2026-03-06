@@ -9,6 +9,7 @@ import com.swapstyle.swapstyle.entity.Article;
 import com.swapstyle.swapstyle.entity.User;
 import com.swapstyle.swapstyle.repository.ArticleRepository;
 import com.swapstyle.swapstyle.dto.response.ArticleCardReponseDTO;
+import com.swapstyle.swapstyle.dto.response.ArticleResponseDto;
 
 
 @Service
@@ -18,14 +19,13 @@ public class ArticleServiceImpl implements ArticleService {
 
     private final UserService userService;
 
-    public ArticleServiceImpl(ArticleRepository articleRepository, UserService userService){
+    public ArticleServiceImpl(ArticleRepository articleRepository, UserService userService) {
         this.articleRepository = articleRepository;
-       this.userService= userService;
+        this.userService = userService;
     }
-     
 
     @Override
-    public Article createArticle(ArticleRequestDTO dto, Integer idUser) {
+    public ArticleResponseDto createArticle(ArticleRequestDTO dto, Integer idUser) {
 
         User user = userService.getUserById(idUser);
         
@@ -39,46 +39,55 @@ public class ArticleServiceImpl implements ArticleService {
         article.setImage(dto.image());
         article.setUserOffers(user);
 
-        return articleRepository.save(article);
+        Article savedArticle = articleRepository.save(article);
+
+        return new ArticleResponseDto(
+        savedArticle.getIdArticle(),
+        savedArticle.getTitle(),
+        savedArticle.getDescription(),
+        savedArticle.getSize(),
+        savedArticle.getPrice(),
+        savedArticle.getCategory().name(),
+        savedArticle.getState().name(),
+        savedArticle.getImage(),
+        savedArticle.getUserOffers().getIdUser());
 
     }
 
-     @Override
+    @Override
     public List<ArticleCardReponseDTO> getAllArticles() {
         List<Article> article = articleRepository.findAll();
         return article.stream()
-        .map(a -> new ArticleCardReponseDTO(
-            a.getTitle(),
-            a.getSize(),
-            a.getPrice(),
-            a.getCategory(),
-            a.getState(),
-            a.getImage(),
-            a.getPublished(),
-            a.getUserOffers().getUserName()
-        ))
-        .toList();
+                .map(a -> new ArticleCardReponseDTO(
+                        a.getTitle(),
+                        a.getSize(),
+                        a.getPrice(),
+                        a.getCategory(),
+                        a.getState(),
+                        a.getImage(),
+                        a.getPublished(),
+                        a.getUserOffers().getUserName()))
+                .toList();
     }
-
 
     // @Override
     // public Article getDetail(Integer id) {
-    //     // TODO Auto-generated method stub
-    //     throw new UnsupportedOperationException("Unimplemented method 'getDetail'");
+    // // TODO Auto-generated method stub
+    // throw new UnsupportedOperationException("Unimplemented method 'getDetail'");
     // }
 
     // @Override
     // public Article deleteArticle(Integer id) {
-    //     // TODO Auto-generated method stub
-    //     throw new UnsupportedOperationException("Unimplemented method 'deleteArticle'");
+    // // TODO Auto-generated method stub
+    // throw new UnsupportedOperationException("Unimplemented method
+    // 'deleteArticle'");
     // }
 
     // @Override
     // public Article updateArticle(Article article) {
-    //     // TODO Auto-generated method stub
-    //     throw new UnsupportedOperationException("Unimplemented method 'updateArticle'");
+    // // TODO Auto-generated method stub
+    // throw new UnsupportedOperationException("Unimplemented method
+    // 'updateArticle'");
     // }
 
-    
 }
- 

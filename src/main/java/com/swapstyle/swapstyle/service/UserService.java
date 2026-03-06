@@ -3,6 +3,7 @@ import com.swapstyle.swapstyle.dto.request.LoginRequestDTO;
 import com.swapstyle.swapstyle.dto.request.RegisterRequestDTO;
 import com.swapstyle.swapstyle.dto.request.UserUpdateDTO;
 import com.swapstyle.swapstyle.dto.response.UserProfileResponseDTO;
+import com.swapstyle.swapstyle.entity.User;
 
 
 public interface UserService {
@@ -18,5 +19,7 @@ public interface UserService {
     public UserProfileResponseDTO updateUserAvatar(Integer id, UserUpdateDTO dto);
 
     public void deleteUser(Integer id);
+
+    public User getUserById(Integer idUser);
 
 }

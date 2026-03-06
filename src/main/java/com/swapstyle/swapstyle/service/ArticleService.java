@@ -4,11 +4,12 @@ import java.util.List;
 
 import com.swapstyle.swapstyle.dto.request.ArticleRequestDTO;
 import com.swapstyle.swapstyle.dto.response.ArticleCardReponseDTO;
+import com.swapstyle.swapstyle.dto.response.ArticleResponseDto;
 import com.swapstyle.swapstyle.entity.Article;
 
 public interface ArticleService {
 
-public Article createArticle(ArticleRequestDTO dto, Integer idUser );
+public ArticleResponseDto createArticle(ArticleRequestDTO dto, Integer idUser );
 
 public List<ArticleCardReponseDTO> getAllArticles();
 

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.swapstyle.swapstyle.dto.request.ArticleRequestDTO;
 import com.swapstyle.swapstyle.dto.response.ArticleCardReponseDTO;
+import com.swapstyle.swapstyle.dto.response.ArticleResponseDto;
 import com.swapstyle.swapstyle.entity.Article;
 import com.swapstyle.swapstyle.service.ArticleService;
 
@@ -30,8 +31,8 @@ public class ArticleController {
     }
 
     @PostMapping("/add/{idUser}")
-    public ResponseEntity<Article> createArticle(@RequestBody ArticleRequestDTO dto, @PathVariable Integer idUser) {
-    Article article = articleService.createArticle(dto, idUser);
+    public ResponseEntity<ArticleResponseDto> createArticle(@RequestBody ArticleRequestDTO dto, @PathVariable Integer idUser) {
+    ArticleResponseDto article = articleService.createArticle(dto, idUser);
         
     return new ResponseEntity<>(article, HttpStatus.CREATED);
     }

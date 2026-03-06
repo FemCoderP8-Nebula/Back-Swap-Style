@@ -31,12 +31,11 @@ public class UserServiceImpl implements UserService {
         User savedUser = userRepository.save(user);
 
         return new UserProfileResponseDTO(
-            savedUser.getIdUser(),
-            savedUser.getUserName(),
-            savedUser.getEmail(),
-            savedUser.getAvatar(),
-            savedUser.getRole()
-        );
+                savedUser.getIdUser(),
+                savedUser.getUserName(),
+                savedUser.getEmail(),
+                savedUser.getAvatar(),
+                savedUser.getRole());
     }
 
     @Override
@@ -70,12 +69,11 @@ public class UserServiceImpl implements UserService {
         user.setUserName(dto.userName());
         User updatedUser = userRepository.save(user);
         return new UserProfileResponseDTO(
-            updatedUser.getIdUser(),
-            updatedUser.getUserName(),
-            updatedUser.getEmail(),
-            updatedUser.getAvatar(),
-            updatedUser.getRole()
-        );
+                updatedUser.getIdUser(),
+                updatedUser.getUserName(),
+                updatedUser.getEmail(),
+                updatedUser.getAvatar(),
+                updatedUser.getRole());
     }
 
     @Override
@@ -84,21 +82,25 @@ public class UserServiceImpl implements UserService {
         user.setAvatar(dto.avatar());
         User updatedUser = userRepository.save(user);
         return new UserProfileResponseDTO(
-            updatedUser.getIdUser(),
-            updatedUser.getUserName(),
-            updatedUser.getEmail(),
-            updatedUser.getAvatar(),
-            updatedUser.getRole()
-        );
+                updatedUser.getIdUser(),
+                updatedUser.getUserName(),
+                updatedUser.getEmail(),
+                updatedUser.getAvatar(),
+                updatedUser.getRole());
     }
 
     @Override
-    public  void deleteUser(Integer id) {
-        if(!userRepository.existsById(id)){
+    public void deleteUser(Integer id) {
+        if (!userRepository.existsById(id)) {
             throw new RuntimeException("User not found");
-        } userRepository.deleteById(id);
+        }
+        userRepository.deleteById(id);
     }
 
-
+    @Override
+    public User getUserById(Integer idUser) {
+        return userRepository.findById(idUser)
+                .orElseThrow(() -> new RuntimeException("User" + idUser + " not found " ));
+    }
 
 }
