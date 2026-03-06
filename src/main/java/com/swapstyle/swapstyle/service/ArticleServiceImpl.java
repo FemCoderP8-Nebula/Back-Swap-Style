@@ -71,19 +71,18 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public List<ArticleCardReponseDTO> findByPublishedRange(PublishedRange range) {
         LocalDateTime now = LocalDateTime.now();
-        List<Article> articles = articleRepository.findAll();
+        List<Article> articles;
+
+        switch (range) {
+            case LAST_24HS -> articles = articleRepository.findByPublishedAfter(now.minusHours(24));
+            case LAST_WEEK -> articles = articleRepository.findByPublishedAfter(now.minusWeeks(1));
+            case LAST_MONTH -> articles = articleRepository.findByPublishedAfter(now.minusMonths(1));
+            case OLDERS -> articles = articleRepository.findByPublishedBefore(now.minusMonths(1));
+            default -> throw new RuntimeException("Please select a range of time");
+        }
+        ;
 
         return articles.stream()
-                .filter(a -> {
-                    LocalDateTime published = a.getPublished();
-
-                    return switch (range) {
-                        case LAST_24HS -> published.isAfter(now.minusHours(24));
-                        case LAST_WEEK -> published.isAfter(now.minusWeeks(1));
-                        case LAST_MONTH -> published.isAfter(now.minusMonths(1));
-                        case OLDERS -> published.isBefore(now.minusMonths(1));
-                    };
-                })
                 .sorted(Comparator.comparing(Article::getPublished).reversed())
                 .map(a -> new ArticleCardReponseDTO(
                         a.getTitle(),
@@ -97,6 +96,5 @@ public class ArticleServiceImpl implements ArticleService {
                 .toList();
     }
 
-    //LLAMO AL FIND ALL... GASTO INNECESARIO?
-    //.map mapper??
+    // .map mapper??
 }
