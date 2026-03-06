@@ -1,14 +1,12 @@
 package com.swapstyle.swapstyle.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.swapstyle.swapstyle.dto.request.LoginRequestDTO;
 import com.swapstyle.swapstyle.dto.request.RegisterRequestDTO;
 import com.swapstyle.swapstyle.dto.request.UserUpdateDTO;
 import com.swapstyle.swapstyle.dto.response.UserProfileResponseDTO;
-import com.swapstyle.swapstyle.entity.User;
 import com.swapstyle.swapstyle.service.UserService;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;

@@ -1,5 +1,7 @@
 package com.swapstyle.swapstyle.service;
 
+import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -11,6 +13,10 @@ import com.swapstyle.swapstyle.repository.ArticleRepository;
 import com.swapstyle.swapstyle.dto.response.ArticleCardReponseDTO;
 import com.swapstyle.swapstyle.dto.response.ArticleResponseDto;
 
+//import java.time.LocalDateTime;
+import com.swapstyle.swapstyle.entity.enums.Category;
+//import com.swapstyle.swapstyle.entity.enums.State;
+import com.swapstyle.swapstyle.entity.enums.PublishedRange;
 
 @Service
 public class ArticleServiceImpl implements ArticleService {
@@ -57,7 +63,11 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public List<ArticleCardReponseDTO> getAllArticles() {
         List<Article> article = articleRepository.findAll();
+        if (article.isEmpty()) {
+            throw new RuntimeException("There's no articles published");
+        }
         return article.stream()
+                .sorted(Comparator.comparing(Article::getPublished).reversed())
                 .map(a -> new ArticleCardReponseDTO(
                         a.getTitle(),
                         a.getSize(),
@@ -70,24 +80,57 @@ public class ArticleServiceImpl implements ArticleService {
                 .toList();
     }
 
-    // @Override
-    // public Article getDetail(Integer id) {
-    // // TODO Auto-generated method stub
-    // throw new UnsupportedOperationException("Unimplemented method 'getDetail'");
-    // }
+    @Override
+    public List<ArticleCardReponseDTO> findByCategory(Category category) {
+        List<Article> articles = articleRepository.findByCategory(category);
+        if (articles.isEmpty()) {
+            throw new RuntimeException("Doesn't exist articles for the category selected");
+        }
+        return articles.stream()
+                .sorted(Comparator.comparing(Article::getPublished).reversed())
+                .map(article -> new ArticleCardReponseDTO(
+                        article.getTitle(),
+                        article.getSize(),
+                        article.getPrice(),
+                        article.getCategory(),
+                        article.getState(),
+                        article.getImage(),
+                        article.getPublished(),
+                        article.getUserOffers().getUserName()))
+                .toList();
+    }
+    // COLLECTOR
+    // OPTIONAL
 
-    // @Override
-    // public Article deleteArticle(Integer id) {
-    // // TODO Auto-generated method stub
-    // throw new UnsupportedOperationException("Unimplemented method
-    // 'deleteArticle'");
-    // }
+    @Override
+    public List<ArticleCardReponseDTO> findByPublishedRange(PublishedRange range) {
+        LocalDateTime now = LocalDateTime.now();
+        List<Article> articles = articleRepository.findAll();
 
-    // @Override
-    // public Article updateArticle(Article article) {
-    // // TODO Auto-generated method stub
-    // throw new UnsupportedOperationException("Unimplemented method
-    // 'updateArticle'");
-    // }
+        return articles.stream()
+                .filter(a -> {
+                    LocalDateTime published = a.getPublished();
 
+                    return switch (range) {
+                        case LAST_24HS -> published.isAfter(now.minusHours(24));
+                        case LAST_WEEK -> published.isAfter(now.minusWeeks(1));
+                        case LAST_MONTH -> published.isAfter(now.minusMonths(1));
+                        case OLDERS -> published.isBefore(now.minusMonths(1));
+                    };
+                })
+                .sorted(Comparator.comparing(Article::getPublished).reversed())
+                .map(a -> new ArticleCardReponseDTO(
+                        a.getTitle(),
+                        a.getSize(),
+                        a.getPrice(),
+                        a.getCategory(),
+                        a.getState(),
+                        a.getImage(),
+                        a.getPublished(),
+                        a.getUserOffers().getUserName()))
+                .toList();
+    }
+
+    //LLAMO AL FIND ALL... GASTO INNECESARIO?
+    //.map mapper??
 }

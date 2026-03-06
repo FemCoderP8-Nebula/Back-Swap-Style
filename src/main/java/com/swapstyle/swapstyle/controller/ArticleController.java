@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.swapstyle.swapstyle.dto.request.ArticleRequestDTO;
 import com.swapstyle.swapstyle.dto.response.ArticleCardReponseDTO;
 import com.swapstyle.swapstyle.dto.response.ArticleResponseDto;
-import com.swapstyle.swapstyle.entity.Article;
+import com.swapstyle.swapstyle.entity.enums.Category;
+import com.swapstyle.swapstyle.entity.enums.PublishedRange;
 import com.swapstyle.swapstyle.service.ArticleService;
 
 import java.util.List;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("api/v1/article")
@@ -41,6 +44,19 @@ public class ArticleController {
     @GetMapping("/articles")
     public ResponseEntity<List<ArticleCardReponseDTO>> getAllArticles() {
         List<ArticleCardReponseDTO> articles = articleService.getAllArticles();
+        return new ResponseEntity<>(articles, HttpStatus.OK);
+    }
+
+    @GetMapping("/articlesByCategory")
+    public ResponseEntity<List<ArticleCardReponseDTO>> findByCategory(@RequestParam Category category) {
+        List<ArticleCardReponseDTO> articles = articleService.findByCategory(category);
+        return new ResponseEntity<>(articles, HttpStatus.OK);
+    }
+
+    
+    @GetMapping("/articlesByPublishedRange")
+    public ResponseEntity<List<ArticleCardReponseDTO>> findByPublishedRange(@RequestParam PublishedRange range) {
+        List<ArticleCardReponseDTO> articles = articleService.findByPublishedRange(range);
         return new ResponseEntity<>(articles, HttpStatus.OK);
     }
     
