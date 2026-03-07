@@ -4,12 +4,16 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.swapstyle.swapstyle.dto.request.ArticleRequestDTO;
 import com.swapstyle.swapstyle.entity.Article;
 import com.swapstyle.swapstyle.entity.User;
 import com.swapstyle.swapstyle.repository.ArticleRepository;
+
+
 import com.swapstyle.swapstyle.dto.response.ArticleCardReponseDTO;
 import com.swapstyle.swapstyle.dto.response.ArticleResponseDto;
 
@@ -17,6 +21,7 @@ import com.swapstyle.swapstyle.dto.response.ArticleResponseDto;
 import com.swapstyle.swapstyle.entity.enums.Category;
 //import com.swapstyle.swapstyle.entity.enums.State;
 import com.swapstyle.swapstyle.entity.enums.PublishedRange;
+import com.swapstyle.swapstyle.mapper.ArticleMapper;
 
 @Service
 public class ArticleServiceImpl implements ArticleService {
@@ -25,9 +30,12 @@ public class ArticleServiceImpl implements ArticleService {
 
     private final UserService userService;
 
-    public ArticleServiceImpl(ArticleRepository articleRepository, UserService userService) {
+    private final ArticleMapper articleMapper;
+
+    public ArticleServiceImpl(ArticleRepository articleRepository, UserService userService,ArticleMapper articleMapper) {
         this.articleRepository = articleRepository;
         this.userService = userService;
+        this.articleMapper=articleMapper;
     }
 
     @Override
@@ -131,4 +139,12 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     // .map mapper??
+
+
+    @Override
+    public Page<ArticleCardReponseDTO> getArticlesGallery(Pageable pageable) {
+        Page<Article> articles = articleRepository.findAll(pageable);
+        return articles.map(articleMapper::toCardDTO);
+    }
 }
+

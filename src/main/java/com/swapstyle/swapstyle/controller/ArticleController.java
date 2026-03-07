@@ -8,12 +8,16 @@ import org.springframework.web.bind.annotation.RestController;
 import com.swapstyle.swapstyle.dto.request.ArticleRequestDTO;
 import com.swapstyle.swapstyle.dto.response.ArticleCardReponseDTO;
 import com.swapstyle.swapstyle.dto.response.ArticleResponseDto;
+import com.swapstyle.swapstyle.entity.Article;
 import com.swapstyle.swapstyle.entity.enums.Category;
 import com.swapstyle.swapstyle.entity.enums.PublishedRange;
 import com.swapstyle.swapstyle.service.ArticleService;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -61,4 +65,17 @@ public class ArticleController {
     }
     
 
+    //paginación de galería
+    @GetMapping("/gallery")
+    public ResponseEntity<Page<ArticleCardReponseDTO>> getArticlesGallery(@PageableDefault(page = 0, size = 30) Pageable pageable) {
+        Page<ArticleCardReponseDTO> articles = articleService.getArticlesGallery(pageable);
+        return ResponseEntity.ok(articles);
+    }
+
+    //filtro para categoría
+    @GetMapping("/categories")
+    public ResponseEntity<Category[]> getCategories() {
+        return ResponseEntity.ok(Category.values());
 }
+}
+
