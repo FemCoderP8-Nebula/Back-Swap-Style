@@ -76,6 +76,15 @@ public class ArticleController {
     @GetMapping("/categories")
     public ResponseEntity<Category[]> getCategories() {
         return ResponseEntity.ok(Category.values());
+    }
+
+    //articulos que ofrece el usuario (para el armario)
+    @GetMapping("/user/{idUser}")
+    public ResponseEntity<List<ArticleCardReponseDTO>> getArticlesByUser(@PathVariable Integer idUser) {
+    List<ArticleCardReponseDTO> articles = articleService.getArticlesByUser(idUser);
+    return new ResponseEntity<>(articles, HttpStatus.OK);
 }
+
+
 }
 

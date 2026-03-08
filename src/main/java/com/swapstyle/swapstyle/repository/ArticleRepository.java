@@ -13,4 +13,6 @@ public interface ArticleRepository  extends JpaRepository <Article, Integer> {
     List<Article> findByCategory(Category category);
     List<Article> findByPublishedAfter(LocalDateTime date);
     List<Article> findByPublishedBefore(LocalDateTime date);
+    List<Article> findByUserOffers_IdUser(Integer idUser);
+
 }

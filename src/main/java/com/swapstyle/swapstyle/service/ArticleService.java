@@ -34,4 +34,6 @@ public List<ArticleCardReponseDTO> findByPublishedRange(PublishedRange range);
 
  public Page<ArticleCardReponseDTO> getArticlesGallery(Pageable pageable);
 
+ public List<ArticleCardReponseDTO> getArticlesByUser(Integer idUser);
+
 }

@@ -3,6 +3,7 @@ package com.swapstyle.swapstyle.service;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -146,5 +147,13 @@ public class ArticleServiceImpl implements ArticleService {
         Page<Article> articles = articleRepository.findAll(pageable);
         return articles.map(articleMapper::toCardDTO);
     }
+
+    @Override
+     public List<ArticleCardReponseDTO> getArticlesByUser(Integer idUser) {
+    List<Article> articles = articleRepository.findByUserOffers_IdUser(idUser);
+    return articles.stream()
+        .map(article -> articleMapper.toCardDTO(article))
+        .collect(Collectors.toList());
+}
 }
 
