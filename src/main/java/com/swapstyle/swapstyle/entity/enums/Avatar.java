@@ -7,5 +7,8 @@ public enum Avatar {
     DONKEY,
     UNICORN,
     PENGUIN,
-    MONSTER
+    MONSTER,
+    DRAGON,
+    WOLF
+
 }

@@ -5,7 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import com.swapstyle.swapstyle.dto.request.LoginRequestDTO;
 import com.swapstyle.swapstyle.dto.request.RegisterRequestDTO;
-import com.swapstyle.swapstyle.dto.request.UserUpdateDTO;
+import com.swapstyle.swapstyle.dto.request.UserAvatarUpdateDTO;
+import com.swapstyle.swapstyle.dto.request.UserNameUpdateDTO;
+//import com.swapstyle.swapstyle.dto.request.UserUpdateDTO;
 import com.swapstyle.swapstyle.dto.response.UserProfileResponseDTO;
 import com.swapstyle.swapstyle.entity.User;
 import com.swapstyle.swapstyle.repository.UserRepository;
@@ -63,7 +65,7 @@ public class UserServiceImpl implements UserService {
                 user.getRole());
     }
 
-    @Override
+    /*@Override
     public UserProfileResponseDTO updateUserName(Integer id, UserUpdateDTO dto) {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         user.setUserName(dto.userName());
@@ -74,9 +76,9 @@ public class UserServiceImpl implements UserService {
                 updatedUser.getEmail(),
                 updatedUser.getAvatar(),
                 updatedUser.getRole());
-    }
+    }*/
 
-    @Override
+   /* @Override
     public UserProfileResponseDTO updateUserAvatar(Integer id, UserUpdateDTO dto) {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         user.setAvatar(dto.avatar());
@@ -87,7 +89,7 @@ public class UserServiceImpl implements UserService {
                 updatedUser.getEmail(),
                 updatedUser.getAvatar(),
                 updatedUser.getRole());
-    }
+    }*/
 
     @Override
     public void deleteUser(Integer id) {
@@ -103,4 +105,33 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new RuntimeException("User" + idUser + " not found " ));
     }
 
+
+    //sobreescribe el nombre sin necesidad del avatar
+    @Override
+    public UserProfileResponseDTO updateUserName(Integer id, UserNameUpdateDTO dto) {
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        user.setUserName(dto.userName());
+        User updatedUser = userRepository.save(user);
+        return new UserProfileResponseDTO(
+                updatedUser.getIdUser(),
+                updatedUser.getUserName(),
+                updatedUser.getEmail(),
+                updatedUser.getAvatar(),
+                updatedUser.getRole());
+    }
+
+
+    //sobreescribe el avatar sin necesidad del nombre
+    @Override
+    public UserProfileResponseDTO updateUserAvatar(Integer id, UserAvatarUpdateDTO dto) {
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        user.setAvatar(dto.avatar());
+        User updatedUser = userRepository.save(user);
+        return new UserProfileResponseDTO(
+                updatedUser.getIdUser(),
+                updatedUser.getUserName(),
+                updatedUser.getEmail(),
+                updatedUser.getAvatar(),
+                updatedUser.getRole());
+    }
 }

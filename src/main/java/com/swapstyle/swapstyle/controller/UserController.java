@@ -2,7 +2,9 @@ package com.swapstyle.swapstyle.controller;
 
 import com.swapstyle.swapstyle.dto.request.LoginRequestDTO;
 import com.swapstyle.swapstyle.dto.request.RegisterRequestDTO;
-import com.swapstyle.swapstyle.dto.request.UserUpdateDTO;
+import com.swapstyle.swapstyle.dto.request.UserAvatarUpdateDTO;
+import com.swapstyle.swapstyle.dto.request.UserNameUpdateDTO;
+//import com.swapstyle.swapstyle.dto.request.UserUpdateDTO;
 import com.swapstyle.swapstyle.dto.response.UserProfileResponseDTO;
 import com.swapstyle.swapstyle.service.UserService;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,7 +46,7 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PatchMapping("/name/{id}")
+    /*@PatchMapping("/name/{id}")
     public ResponseEntity<UserProfileResponseDTO> updateUserName(@PathVariable Integer id,@RequestBody UserUpdateDTO dto) {
         UserProfileResponseDTO updated = userService.updateUserName(id, dto);
         return new ResponseEntity<>(updated, HttpStatus.OK);
@@ -54,11 +56,24 @@ public class UserController {
     public ResponseEntity<UserProfileResponseDTO> updateUserAvatar(@PathVariable Integer id,@RequestBody UserUpdateDTO dto) {
         UserProfileResponseDTO updated = userService.updateUserAvatar(id, dto);
         return new ResponseEntity<>(updated, HttpStatus.OK);
-    }
+    }*/
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
     userService.deleteUser(id);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+
+    @PatchMapping("/name/{id}")
+    public ResponseEntity<UserProfileResponseDTO> updateUserName(@PathVariable Integer id,@RequestBody UserNameUpdateDTO dto) {
+        UserProfileResponseDTO updated = userService.updateUserName(id, dto);
+        return new ResponseEntity<>(updated, HttpStatus.OK);
+    }
+
+    @PatchMapping("/avatar/{id}")
+    public ResponseEntity<UserProfileResponseDTO> updateUserAvatar(@PathVariable Integer id,@RequestBody UserAvatarUpdateDTO dto) {
+        UserProfileResponseDTO updated = userService.updateUserAvatar(id, dto);
+        return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 }

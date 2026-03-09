@@ -2,6 +2,9 @@ package com.swapstyle.swapstyle.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.swapstyle.swapstyle.dto.request.ArticleRequestDTO;
 import com.swapstyle.swapstyle.dto.response.ArticleCardReponseDTO;
 import com.swapstyle.swapstyle.dto.response.ArticleResponseDto;
@@ -28,5 +31,9 @@ public List<ArticleCardReponseDTO> getAllArticles();
 public List<ArticleCardReponseDTO> findByCategory(Category category);
 
 public List<ArticleCardReponseDTO> findByPublishedRange(PublishedRange range);
+
+ public Page<ArticleCardReponseDTO> getArticlesGallery(Pageable pageable);
+
+ public List<ArticleCardReponseDTO> getArticlesByUser(Integer idUser);
 
 }
