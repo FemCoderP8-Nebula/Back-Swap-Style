@@ -12,16 +12,14 @@ import org.springframework.stereotype.Service;
 
 import com.swapstyle.swapstyle.dto.request.ArticleRequestDTO;
 import com.swapstyle.swapstyle.entity.Article;
+import com.swapstyle.swapstyle.entity.Reserve;
 import com.swapstyle.swapstyle.entity.User;
 import com.swapstyle.swapstyle.repository.ArticleRepository;
-
-
+import com.swapstyle.swapstyle.repository.ReserveRepository;
 import com.swapstyle.swapstyle.dto.response.ArticleCardReponseDTO;
 import com.swapstyle.swapstyle.dto.response.ArticleResponseDto;
 
-//import java.time.LocalDateTime;
 import com.swapstyle.swapstyle.entity.enums.Category;
-//import com.swapstyle.swapstyle.entity.enums.State;
 import com.swapstyle.swapstyle.entity.enums.PublishedRange;
 import com.swapstyle.swapstyle.mapper.ArticleMapper;
 import org.springframework.data.domain.Sort;
@@ -35,17 +33,21 @@ public class ArticleServiceImpl implements ArticleService {
 
     private final ArticleMapper articleMapper;
 
-    public ArticleServiceImpl(ArticleRepository articleRepository, UserService userService,ArticleMapper articleMapper) {
+    private final ReserveRepository reserveRepository;
+
+    public ArticleServiceImpl(ArticleRepository articleRepository, UserService userService, ArticleMapper articleMapper,
+            ReserveRepository reserveRepository) {
         this.articleRepository = articleRepository;
         this.userService = userService;
-        this.articleMapper=articleMapper;
+        this.articleMapper = articleMapper;
+        this.reserveRepository = reserveRepository;
     }
 
     @Override
     public ArticleResponseDto createArticle(ArticleRequestDTO dto, Integer idUser) {
 
         User user = userService.getUserById(idUser);
-        
+
         Article article = new Article();
         article.setTitle(dto.title());
         article.setDescription(dto.description());
@@ -59,16 +61,19 @@ public class ArticleServiceImpl implements ArticleService {
         Article savedArticle = articleRepository.save(article);
 
         return new ArticleResponseDto(
-        savedArticle.getIdArticle(),
-        savedArticle.getTitle(),
-        savedArticle.getDescription(),
-        savedArticle.getSize(),
-        savedArticle.getPrice(),
-        savedArticle.getCategory().name(),
-        savedArticle.getState().name(),
-        savedArticle.getImage(),
-        savedArticle.getUserOffers().getIdUser());
-
+                savedArticle.getIdArticle(),
+                savedArticle.getTitle(),
+                savedArticle.getDescription(),
+                savedArticle.getSize(),
+                savedArticle.getPrice(),
+                savedArticle.getCategory().name(),
+                savedArticle.getState().name(),
+                savedArticle.getImage(),
+                savedArticle.getUserOffers().getIdUser(),
+                savedArticle.getUserOffers().getUserName(),
+                false,
+                null,
+                null);
     }
 
     @Override
@@ -79,16 +84,25 @@ public class ArticleServiceImpl implements ArticleService {
         }
         return article.stream()
                 .sorted(Comparator.comparing(Article::getPublished).reversed())
-                .map(a -> new ArticleCardReponseDTO(
-                        a.getTitle(),
-                        a.getSize(),
-                        a.getPrice(),
-                        a.getCategory(),
-                        a.getState(),
-                        a.getImage(),
-                        a.getPublished(),
-                        a.getUserOffers().getUserName(),
-                        a.getIsReserved()))
+                .map(a -> {
+                    LocalDateTime expiryDate = reserveRepository
+                            .findByArticleIdArticle(a.getIdArticle())
+                            .map(Reserve::getExpiryDate)
+                            .orElse(null);
+
+                    return new ArticleCardReponseDTO(
+                            a.getIdArticle(),
+                            a.getTitle(),
+                            a.getSize(),
+                            a.getPrice(),
+                            a.getCategory(),
+                            a.getState(),
+                            a.getImage(),
+                            a.getPublished(),
+                            a.getUserOffers().getUserName(),
+                            a.getIsReserved(),
+                            expiryDate);
+                })
                 .toList();
     }
 
@@ -100,20 +114,27 @@ public class ArticleServiceImpl implements ArticleService {
         }
         return articles.stream()
                 .sorted(Comparator.comparing(Article::getPublished).reversed())
-                .map(article -> new ArticleCardReponseDTO(
-                        article.getTitle(),
-                        article.getSize(),
-                        article.getPrice(),
-                        article.getCategory(),
-                        article.getState(),
-                        article.getImage(),
-                        article.getPublished(),
-                        article.getUserOffers().getUserName(),
-                    article.getIsReserved()))
+                .map(a -> {
+                    LocalDateTime expiryDate = reserveRepository
+                            .findByArticleIdArticle(a.getIdArticle())
+                            .map(Reserve::getExpiryDate)
+                            .orElse(null);
+
+                    return new ArticleCardReponseDTO(
+                            a.getIdArticle(),
+                            a.getTitle(),
+                            a.getSize(),
+                            a.getPrice(),
+                            a.getCategory(),
+                            a.getState(),
+                            a.getImage(),
+                            a.getPublished(),
+                            a.getUserOffers().getUserName(),
+                            a.getIsReserved(),
+                            expiryDate);
+                })
                 .toList();
     }
-    // COLLECTOR
-    // OPTIONAL
 
     @Override
     public List<ArticleCardReponseDTO> findByPublishedRange(PublishedRange range) {
@@ -126,46 +147,81 @@ public class ArticleServiceImpl implements ArticleService {
             case LAST_MONTH -> articles = articleRepository.findByPublishedAfter(now.minusMonths(1));
             case OLDERS -> articles = articleRepository.findByPublishedBefore(now.minusMonths(1));
             default -> throw new RuntimeException("Please select a range of time");
-        };
+        }
+        ;
 
-         Comparator<Article> comparator = (range == PublishedRange.OLDERS)
-        ? Comparator.comparing(Article::getPublished)
-        : Comparator.comparing(Article::getPublished).reversed();
-
+        Comparator<Article> comparator = (range == PublishedRange.OLDERS)
+                ? Comparator.comparing(Article::getPublished)
+                : Comparator.comparing(Article::getPublished).reversed();
 
         return articles.stream()
-                //.sorted(Comparator.comparing(Article::getPublished).reversed())
                 .sorted(comparator)
-                .map(a -> new ArticleCardReponseDTO(
-                        a.getTitle(),
-                        a.getSize(),
-                        a.getPrice(),
-                        a.getCategory(),
-                        a.getState(),
-                        a.getImage(),
-                        a.getPublished(),
-                        a.getUserOffers().getUserName(),
-                        a.getIsReserved()))
+                .map(a -> {
+                    LocalDateTime expiryDate = reserveRepository
+                            .findByArticleIdArticle(a.getIdArticle())
+                            .map(Reserve::getExpiryDate)
+                            .orElse(null);
+
+                    return new ArticleCardReponseDTO(
+                            a.getIdArticle(),
+                            a.getTitle(),
+                            a.getSize(),
+                            a.getPrice(),
+                            a.getCategory(),
+                            a.getState(),
+                            a.getImage(),
+                            a.getPublished(),
+                            a.getUserOffers().getUserName(),
+                            a.getIsReserved(),
+                            expiryDate);
+                })
                 .toList();
     }
 
-    // .map mapper??
-
-
-   @Override
+    @Override
     public Page<ArticleCardReponseDTO> getArticlesGallery(Pageable pageable) {
-    Page<Article> articles = articleRepository.findAll(
-        PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "published"))
-    );
-    return articles.map(articleMapper::toCardDTO);
+        Page<Article> articles = articleRepository.findAll(
+                PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+                        Sort.by(Sort.Direction.DESC, "published")));
+        return articles.map(articleMapper::toCardDTO);
     }
 
     @Override
-     public List<ArticleCardReponseDTO> getArticlesByUser(Integer idUser) {
-    List<Article> articles = articleRepository.findByUserOffers_IdUser(idUser);
-    return articles.stream()
-        .map(article -> articleMapper.toCardDTO(article))
-        .collect(Collectors.toList());
-}
-}
+    public List<ArticleCardReponseDTO> getArticlesByUser(Integer idUser) {
+        List<Article> articles = articleRepository.findByUserOffers_IdUser(idUser);
+        return articles.stream()
+                .map(article -> articleMapper.toCardDTO(article))
+                .collect(Collectors.toList());
+    }
 
+    @Override
+    public ArticleResponseDto getById(Integer id) {
+        Article article = articleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Article not found"));
+
+        LocalDateTime expiryDate = reserveRepository
+                .findByArticleIdArticle(id)
+                .map(Reserve::getExpiryDate)
+                .orElse(null);
+
+        Integer reservedByUserId = reserveRepository
+                .findByArticleIdArticle(id)
+                .map(r -> r.getUserWants().getIdUser())
+                .orElse(null);
+
+        return new ArticleResponseDto(
+                article.getIdArticle(),
+                article.getTitle(),
+                article.getDescription(),
+                article.getSize(),
+                article.getPrice(),
+                article.getCategory().name(),
+                article.getState().name(),
+                article.getImage(),
+                article.getUserOffers().getIdUser(),
+                article.getUserOffers().getUserName(),
+                article.getIsReserved(),
+                reservedByUserId,
+                expiryDate);
+    }
+}

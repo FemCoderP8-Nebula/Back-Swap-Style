@@ -17,7 +17,8 @@ public class ReserveScheduler {
         this.reserveService = reserveService;
     }
 
-    @Scheduled(fixedRate = 3600000)// Acordar si implementamos logica de revision cada cuanto tiempo? ejemplo de 1h?
+    @Scheduled(fixedRate = 60000) // Acordar si implementamos logica de revision cada cuanto tiempo? ejemplo de
+                                  // 1h? --> lo paso a cada minuto para la demo
     public void executeReservationCleanup() {
         log.info("Iniciando limpieza automática de reservas expiradas...");
         reserveService.clearExpiredReservations();
