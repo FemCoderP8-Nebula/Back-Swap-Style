@@ -1,4 +1,4 @@
-package com.swapstyle.swapstyle.scheduler;
+package com.swapstyle.swapstyle.utils.scheduler;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
