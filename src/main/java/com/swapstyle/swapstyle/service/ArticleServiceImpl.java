@@ -10,14 +10,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.swapstyle.swapstyle.dto.request.ArticleRequestDTO;
+import com.swapstyle.swapstyle.dto.request.updateArticleDetails.ArticleCategoryUpdateDTO;
+import com.swapstyle.swapstyle.dto.request.updateArticleDetails.ArticleDescriptionUpdateDTO;
+import com.swapstyle.swapstyle.dto.request.updateArticleDetails.ArticlePriceUpdateDTO;
+import com.swapstyle.swapstyle.dto.request.updateArticleDetails.ArticleSizeUpdateDTO;
+import com.swapstyle.swapstyle.dto.request.updateArticleDetails.ArticleStateUpdateDTO;
+import com.swapstyle.swapstyle.dto.request.updateArticleDetails.ArticleTitleUpdateDTO;
 import com.swapstyle.swapstyle.entity.Article;
 import com.swapstyle.swapstyle.entity.User;
 import com.swapstyle.swapstyle.repository.ArticleRepository;
 
-
 import com.swapstyle.swapstyle.dto.response.ArticleCardReponseDTO;
 import com.swapstyle.swapstyle.dto.response.ArticleResponseDto;
-
+import com.swapstyle.swapstyle.dto.response.ArticleResponseUpdateDetailDTO;
 //import java.time.LocalDateTime;
 import com.swapstyle.swapstyle.entity.enums.Category;
 //import com.swapstyle.swapstyle.entity.enums.State;
@@ -33,17 +38,18 @@ public class ArticleServiceImpl implements ArticleService {
 
     private final ArticleMapper articleMapper;
 
-    public ArticleServiceImpl(ArticleRepository articleRepository, UserService userService,ArticleMapper articleMapper) {
+    public ArticleServiceImpl(ArticleRepository articleRepository, UserService userService,
+            ArticleMapper articleMapper) {
         this.articleRepository = articleRepository;
         this.userService = userService;
-        this.articleMapper=articleMapper;
+        this.articleMapper = articleMapper;
     }
 
     @Override
     public ArticleResponseDto createArticle(ArticleRequestDTO dto, Integer idUser) {
 
         User user = userService.getUserById(idUser);
-        
+
         Article article = new Article();
         article.setTitle(dto.title());
         article.setDescription(dto.description());
@@ -57,15 +63,15 @@ public class ArticleServiceImpl implements ArticleService {
         Article savedArticle = articleRepository.save(article);
 
         return new ArticleResponseDto(
-        savedArticle.getIdArticle(),
-        savedArticle.getTitle(),
-        savedArticle.getDescription(),
-        savedArticle.getSize(),
-        savedArticle.getPrice(),
-        savedArticle.getCategory().name(),
-        savedArticle.getState().name(),
-        savedArticle.getImage(),
-        savedArticle.getUserOffers().getIdUser());
+                savedArticle.getIdArticle(),
+                savedArticle.getTitle(),
+                savedArticle.getDescription(),
+                savedArticle.getSize(),
+                savedArticle.getPrice(),
+                savedArticle.getCategory().name(),
+                savedArticle.getState().name(),
+                savedArticle.getImage(),
+                savedArticle.getUserOffers().getIdUser());
 
     }
 
@@ -141,7 +147,6 @@ public class ArticleServiceImpl implements ArticleService {
 
     // .map mapper??
 
-
     @Override
     public Page<ArticleCardReponseDTO> getArticlesGallery(Pageable pageable) {
         Page<Article> articles = articleRepository.findAll(pageable);
@@ -149,11 +154,102 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-     public List<ArticleCardReponseDTO> getArticlesByUser(Integer idUser) {
-    List<Article> articles = articleRepository.findByUserOffers_IdUser(idUser);
-    return articles.stream()
-        .map(article -> articleMapper.toCardDTO(article))
-        .collect(Collectors.toList());
-}
-}
+    public List<ArticleCardReponseDTO> getArticlesByUser(Integer idUser) {
+        List<Article> articles = articleRepository.findByUserOffers_IdUser(idUser);
+        return articles.stream()
+                .map(article -> articleMapper.toCardDTO(article))
+                .collect(Collectors.toList());
+    }
 
+    // UPDATES DETAIL ARTICLE
+
+    @Override
+    public ArticleResponseUpdateDetailDTO updateTitle(Integer id, ArticleTitleUpdateDTO dto) {
+        Article article = articleRepository.findById(id).orElseThrow(() -> new RuntimeException("Article not found"));
+        article.setTitle(dto.title());
+        Article updatedArticle = articleRepository.save(article);
+        return new ArticleResponseUpdateDetailDTO(
+                updatedArticle.getTitle(),
+                updatedArticle.getDescription(),
+                updatedArticle.getSize(),
+                updatedArticle.getPrice(),
+                updatedArticle.getCategory(),
+                updatedArticle.getState(),
+                updatedArticle.getImage());
+    }
+
+    @Override
+    public ArticleResponseUpdateDetailDTO updateDescription(Integer id, ArticleDescriptionUpdateDTO dto) {
+        Article article = articleRepository.findById(id).orElseThrow(() -> new RuntimeException("Article not found"));
+        article.setDescription(dto.description());
+        Article updatedArticle = articleRepository.save(article);
+        return new ArticleResponseUpdateDetailDTO(
+                updatedArticle.getTitle(),
+                updatedArticle.getDescription(),
+                updatedArticle.getSize(),
+                updatedArticle.getPrice(),
+                updatedArticle.getCategory(),
+                updatedArticle.getState(),
+                updatedArticle.getImage());
+    }
+
+    @Override
+    public ArticleResponseUpdateDetailDTO updateSize(Integer id, ArticleSizeUpdateDTO dto) {
+        Article article = articleRepository.findById(id).orElseThrow(() -> new RuntimeException("Article not found"));
+        article.setSize(dto.size());
+        Article updatedArticle = articleRepository.save(article);
+        return new ArticleResponseUpdateDetailDTO(
+                updatedArticle.getTitle(),
+                updatedArticle.getDescription(),
+                updatedArticle.getSize(),
+                updatedArticle.getPrice(),
+                updatedArticle.getCategory(),
+                updatedArticle.getState(),
+                updatedArticle.getImage());
+    }
+
+    @Override
+    public ArticleResponseUpdateDetailDTO updatePrice(Integer id, ArticlePriceUpdateDTO dto) {
+        Article article = articleRepository.findById(id).orElseThrow(() -> new RuntimeException("Article not found"));
+        article.setPrice(dto.price());
+        Article updatedArticle = articleRepository.save(article);
+        return new ArticleResponseUpdateDetailDTO(
+                updatedArticle.getTitle(),
+                updatedArticle.getDescription(),
+                updatedArticle.getSize(),
+                updatedArticle.getPrice(),
+                updatedArticle.getCategory(),
+                updatedArticle.getState(),
+                updatedArticle.getImage());
+    }
+
+    @Override
+    public ArticleResponseUpdateDetailDTO updateState(Integer id, ArticleStateUpdateDTO dto) {
+        Article article = articleRepository.findById(id).orElseThrow(() -> new RuntimeException("Article not found"));
+        article.setState(dto.state());
+        Article updatedArticle = articleRepository.save(article);
+        return new ArticleResponseUpdateDetailDTO(
+                updatedArticle.getTitle(),
+                updatedArticle.getDescription(),
+                updatedArticle.getSize(),
+                updatedArticle.getPrice(),
+                updatedArticle.getCategory(),
+                updatedArticle.getState(),
+                updatedArticle.getImage());
+    }
+
+    @Override
+    public ArticleResponseUpdateDetailDTO updateCategory(Integer id, ArticleCategoryUpdateDTO dto) {
+        Article article = articleRepository.findById(id).orElseThrow(() -> new RuntimeException("Article not found"));
+        article.setCategory(dto.category());
+        Article updatedArticle = articleRepository.save(article);
+        return new ArticleResponseUpdateDetailDTO(
+                updatedArticle.getTitle(),
+                updatedArticle.getDescription(),
+                updatedArticle.getSize(),
+                updatedArticle.getPrice(),
+                updatedArticle.getCategory(),
+                updatedArticle.getState(),
+                updatedArticle.getImage());
+    }
+}
