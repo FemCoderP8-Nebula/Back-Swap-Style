@@ -13,7 +13,8 @@ public record ArticleCardReponseDTO(
     State state,
     String image,
     LocalDateTime published,
-    String sellerName
+    String sellerName,
+    Boolean isReserved
 ) {
    
 }

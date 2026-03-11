@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ import com.swapstyle.swapstyle.entity.enums.Category;
 //import com.swapstyle.swapstyle.entity.enums.State;
 import com.swapstyle.swapstyle.entity.enums.PublishedRange;
 import com.swapstyle.swapstyle.mapper.ArticleMapper;
+import org.springframework.data.domain.Sort;
 
 @Service
 public class ArticleServiceImpl implements ArticleService {
@@ -85,7 +87,8 @@ public class ArticleServiceImpl implements ArticleService {
                         a.getState(),
                         a.getImage(),
                         a.getPublished(),
-                        a.getUserOffers().getUserName()))
+                        a.getUserOffers().getUserName(),
+                        a.getIsReserved()))
                 .toList();
     }
 
@@ -105,7 +108,8 @@ public class ArticleServiceImpl implements ArticleService {
                         article.getState(),
                         article.getImage(),
                         article.getPublished(),
-                        article.getUserOffers().getUserName()))
+                        article.getUserOffers().getUserName(),
+                    article.getIsReserved()))
                 .toList();
     }
     // COLLECTOR
@@ -122,11 +126,16 @@ public class ArticleServiceImpl implements ArticleService {
             case LAST_MONTH -> articles = articleRepository.findByPublishedAfter(now.minusMonths(1));
             case OLDERS -> articles = articleRepository.findByPublishedBefore(now.minusMonths(1));
             default -> throw new RuntimeException("Please select a range of time");
-        }
-        ;
+        };
+
+         Comparator<Article> comparator = (range == PublishedRange.OLDERS)
+        ? Comparator.comparing(Article::getPublished)
+        : Comparator.comparing(Article::getPublished).reversed();
+
 
         return articles.stream()
-                .sorted(Comparator.comparing(Article::getPublished).reversed())
+                //.sorted(Comparator.comparing(Article::getPublished).reversed())
+                .sorted(comparator)
                 .map(a -> new ArticleCardReponseDTO(
                         a.getTitle(),
                         a.getSize(),
@@ -135,17 +144,20 @@ public class ArticleServiceImpl implements ArticleService {
                         a.getState(),
                         a.getImage(),
                         a.getPublished(),
-                        a.getUserOffers().getUserName()))
+                        a.getUserOffers().getUserName(),
+                        a.getIsReserved()))
                 .toList();
     }
 
     // .map mapper??
 
 
-    @Override
+   @Override
     public Page<ArticleCardReponseDTO> getArticlesGallery(Pageable pageable) {
-        Page<Article> articles = articleRepository.findAll(pageable);
-        return articles.map(articleMapper::toCardDTO);
+    Page<Article> articles = articleRepository.findAll(
+        PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "published"))
+    );
+    return articles.map(articleMapper::toCardDTO);
     }
 
     @Override
