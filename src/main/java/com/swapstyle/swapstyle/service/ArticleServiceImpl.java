@@ -1,5 +1,6 @@
 package com.swapstyle.swapstyle.service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -28,25 +29,33 @@ import org.springframework.data.domain.Sort;
 public class ArticleServiceImpl implements ArticleService {
 
     private final ArticleRepository articleRepository;
-
     private final UserService userService;
-
+    private final FileUploadService fileUploadService;
     private final ArticleMapper articleMapper;
-
     private final ReserveRepository reserveRepository;
 
     public ArticleServiceImpl(ArticleRepository articleRepository, UserService userService, ArticleMapper articleMapper,
-            ReserveRepository reserveRepository) {
+            FileUploadService fileUploadService, ReserveRepository reserveRepository) {
         this.articleRepository = articleRepository;
         this.userService = userService;
         this.articleMapper = articleMapper;
+        this.fileUploadService = fileUploadService;
         this.reserveRepository = reserveRepository;
-    }
-
+   
+        }
+        
     @Override
     public ArticleResponseDto createArticle(ArticleRequestDTO dto, Integer idUser) {
 
         User user = userService.getUserById(idUser);
+
+        String fileName;
+        try {
+            fileName = fileUploadService.upload(dto.image());
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error uploading file");
+        }
 
         Article article = new Article();
         article.setTitle(dto.title());
@@ -55,7 +64,7 @@ public class ArticleServiceImpl implements ArticleService {
         article.setPrice(dto.price());
         article.setCategory(dto.category());
         article.setState(dto.state());
-        article.setImage(dto.image());
+        article.setImage(fileName);
         article.setUserOffers(user);
 
         Article savedArticle = articleRepository.save(article);
