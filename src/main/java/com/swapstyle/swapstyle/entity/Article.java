@@ -50,7 +50,7 @@ public class Article {
   @Column(nullable = false)
   private String image;
 
-    @CreationTimestamp
+  @CreationTimestamp
   private LocalDateTime published;
 
   @Column(nullable = false)

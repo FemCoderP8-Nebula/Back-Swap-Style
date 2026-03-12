@@ -8,12 +8,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.swapstyle.swapstyle.entity.Reserve;
 
-public interface ReserveRepository extends JpaRepository <Reserve, Integer>{
+public interface ReserveRepository extends JpaRepository<Reserve, Integer> {
 
     Optional<Reserve> findByArticleIdArticle(Integer idArticle);
 
     List<Reserve> findAllByUserWantsIdUser(Integer userId);
-    
+
     boolean existsByArticleIdArticleAndUserWantsIdUser(Integer idArticle, Integer idUser);
 
     List<Reserve> findAllByExpiryDateBefore(LocalDateTime now);

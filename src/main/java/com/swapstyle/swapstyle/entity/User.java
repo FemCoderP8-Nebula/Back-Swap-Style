@@ -36,7 +36,7 @@ public class User {
 
     @Column(nullable = false)
     private String password;
-    
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Avatar avatar;
@@ -48,5 +48,5 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "userOffers", cascade = CascadeType.ALL)
     private List<Article> articles;
-    
+
 }

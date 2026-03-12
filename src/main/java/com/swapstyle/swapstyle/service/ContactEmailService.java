@@ -9,7 +9,6 @@ import com.swapstyle.swapstyle.dto.request.ContactRequestDTO;
 @Service
 public class ContactEmailService {
 
-
     private final JavaMailSender mailSender;
 
     public ContactEmailService(JavaMailSender mailSender) {
@@ -21,11 +20,10 @@ public class ContactEmailService {
         mail.setTo("swapstylestaff@gmail.com");
         mail.setSubject("New message from " + dto.name());
         mail.setText(
-        "Name: " + dto.name() + "\n" +
-        "Email: " + dto.email() + "\n" +
-        "City: " + dto.city() + "\n\n" +
-        "Message:\n" + dto.message()
-        );
+                "Name: " + dto.name() + "\n" +
+                        "Email: " + dto.email() + "\n" +
+                        "City: " + dto.city() + "\n\n" +
+                        "Message:\n" + dto.message());
         mailSender.send(mail);
     }
 }
