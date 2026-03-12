@@ -12,16 +12,21 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.swapstyle.swapstyle.dto.request.ArticleRequestDTO;
+import com.swapstyle.swapstyle.dto.request.updateArticleDetails.*;
 import com.swapstyle.swapstyle.entity.Article;
 import com.swapstyle.swapstyle.entity.Reserve;
 import com.swapstyle.swapstyle.entity.User;
 import com.swapstyle.swapstyle.repository.ArticleRepository;
-import com.swapstyle.swapstyle.repository.ReserveRepository;
+
 import com.swapstyle.swapstyle.dto.response.ArticleCardReponseDTO;
 import com.swapstyle.swapstyle.dto.response.ArticleResponseDto;
+import com.swapstyle.swapstyle.dto.response.ArticleResponseUpdateDetailDTO;
+
+import com.swapstyle.swapstyle.repository.ReserveRepository;
 
 import com.swapstyle.swapstyle.entity.enums.Category;
 import com.swapstyle.swapstyle.entity.enums.PublishedRange;
+import com.swapstyle.swapstyle.entity.enums.State;
 import com.swapstyle.swapstyle.mapper.ArticleMapper;
 import org.springframework.data.domain.Sort;
 
@@ -203,6 +208,116 @@ public class ArticleServiceImpl implements ArticleService {
                 .collect(Collectors.toList());
     }
 
+    // UPDATES DETAIL ARTICLE
+
+    @Override
+    public ArticleResponseUpdateDetailDTO updateTitle(Integer id, ArticleTitleUpdateDTO dto) {
+        Article article = articleRepository.findById(id).orElseThrow(() -> new RuntimeException("Article not found"));
+        article.setTitle(dto.title());
+        Article updatedArticle = articleRepository.save(article);
+        return new ArticleResponseUpdateDetailDTO(
+                updatedArticle.getIdArticle(),
+                updatedArticle.getTitle(),
+                updatedArticle.getDescription(),
+                updatedArticle.getSize(),
+                updatedArticle.getPrice(),
+                updatedArticle.getCategory().name(),
+                updatedArticle.getState().name(),
+                updatedArticle.getImage(),
+                updatedArticle.getUserOffers().getIdUser(),
+                updatedArticle.getPublished().toString());
+    }
+
+    @Override
+    public ArticleResponseUpdateDetailDTO updateDescription(Integer id, ArticleDescriptionUpdateDTO dto) {
+        Article article = articleRepository.findById(id).orElseThrow(() -> new RuntimeException("Article not found"));
+        article.setDescription(dto.description());
+        Article updatedArticle = articleRepository.save(article);
+        return new ArticleResponseUpdateDetailDTO(
+                updatedArticle.getIdArticle(),
+                updatedArticle.getTitle(),
+                updatedArticle.getDescription(),
+                updatedArticle.getSize(),
+                updatedArticle.getPrice(),
+                updatedArticle.getCategory().name(),
+                updatedArticle.getState().name(),
+                updatedArticle.getImage(),
+                updatedArticle.getUserOffers().getIdUser(),
+                updatedArticle.getPublished().toString());
+    }
+
+    @Override
+    public ArticleResponseUpdateDetailDTO updateSize(Integer id, ArticleSizeUpdateDTO dto) {
+        Article article = articleRepository.findById(id).orElseThrow(() -> new RuntimeException("Article not found"));
+        article.setSize(dto.size());
+        Article updatedArticle = articleRepository.save(article);
+        return new ArticleResponseUpdateDetailDTO(
+                updatedArticle.getIdArticle(),
+                updatedArticle.getTitle(),
+                updatedArticle.getDescription(),
+                updatedArticle.getSize(),
+                updatedArticle.getPrice(),
+                updatedArticle.getCategory().name(),
+                updatedArticle.getState().name(),
+                updatedArticle.getImage(),
+                updatedArticle.getUserOffers().getIdUser(),
+                updatedArticle.getPublished().toString());
+    }
+
+    @Override
+    public ArticleResponseUpdateDetailDTO updatePrice(Integer id, ArticlePriceUpdateDTO dto) {
+        Article article = articleRepository.findById(id).orElseThrow(() -> new RuntimeException("Article not found"));
+        article.setPrice(dto.price());
+        Article updatedArticle = articleRepository.save(article);
+        return new ArticleResponseUpdateDetailDTO(
+                updatedArticle.getIdArticle(),
+                updatedArticle.getTitle(),
+                updatedArticle.getDescription(),
+                updatedArticle.getSize(),
+                updatedArticle.getPrice(),
+                updatedArticle.getCategory().name(),
+                updatedArticle.getState().name(),
+                updatedArticle.getImage(),
+                updatedArticle.getUserOffers().getIdUser(),
+                updatedArticle.getPublished().toString());
+    }
+
+    @Override
+    public ArticleResponseUpdateDetailDTO updateState(Integer id, ArticleStateUpdateDTO dto) {
+        Article article = articleRepository.findById(id).orElseThrow(() -> new RuntimeException("Article not found"));
+        article.setState(dto.state());
+        Article updatedArticle = articleRepository.save(article);
+        return new ArticleResponseUpdateDetailDTO(
+                updatedArticle.getIdArticle(),
+                updatedArticle.getTitle(),
+                updatedArticle.getDescription(),
+                updatedArticle.getSize(),
+                updatedArticle.getPrice(),
+                updatedArticle.getCategory().name(),
+                updatedArticle.getState().name(),
+                updatedArticle.getImage(),
+                updatedArticle.getUserOffers().getIdUser(),
+                updatedArticle.getPublished().toString());
+    }
+
+    @Override
+    public ArticleResponseUpdateDetailDTO updateCategory(Integer id, ArticleCategoryUpdateDTO dto) {
+        Article article = articleRepository.findById(id).orElseThrow(() -> new RuntimeException("Article not found"));
+        article.setCategory(dto.category());
+        Article updatedArticle = articleRepository.save(article);
+        return new ArticleResponseUpdateDetailDTO(
+                updatedArticle.getIdArticle(),
+                updatedArticle.getTitle(),
+                updatedArticle.getDescription(),
+                updatedArticle.getSize(),
+                updatedArticle.getPrice(),
+                updatedArticle.getCategory().name(),
+                updatedArticle.getState().name(),
+                updatedArticle.getImage(),
+                updatedArticle.getUserOffers().getIdUser(),
+                updatedArticle.getPublished().toString());
+        }
+        
     @Override
     public ArticleResponseDto getById(Integer id) {
         Article article = articleRepository.findById(id)
