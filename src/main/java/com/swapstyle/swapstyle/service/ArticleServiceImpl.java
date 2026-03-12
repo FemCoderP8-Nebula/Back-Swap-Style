@@ -6,23 +6,28 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.swapstyle.swapstyle.dto.request.ArticleRequestDTO;
 import com.swapstyle.swapstyle.dto.request.updateArticleDetails.*;
 import com.swapstyle.swapstyle.entity.Article;
+import com.swapstyle.swapstyle.entity.Reserve;
 import com.swapstyle.swapstyle.entity.User;
 import com.swapstyle.swapstyle.repository.ArticleRepository;
 
 import com.swapstyle.swapstyle.dto.response.ArticleCardReponseDTO;
 import com.swapstyle.swapstyle.dto.response.ArticleResponseDto;
 import com.swapstyle.swapstyle.dto.response.ArticleResponseUpdateDetailDTO;
-//import java.time.LocalDateTime;
+
+import com.swapstyle.swapstyle.repository.ReserveRepository;
+
 import com.swapstyle.swapstyle.entity.enums.Category;
 import com.swapstyle.swapstyle.entity.enums.PublishedRange;
 import com.swapstyle.swapstyle.entity.enums.State;
 import com.swapstyle.swapstyle.mapper.ArticleMapper;
+import org.springframework.data.domain.Sort;
 
 @Service
 public class ArticleServiceImpl implements ArticleService {
@@ -33,11 +38,14 @@ public class ArticleServiceImpl implements ArticleService {
 
     private final ArticleMapper articleMapper;
 
-    public ArticleServiceImpl(ArticleRepository articleRepository, UserService userService,
-            ArticleMapper articleMapper) {
+    private final ReserveRepository reserveRepository;
+
+    public ArticleServiceImpl(ArticleRepository articleRepository, UserService userService, ArticleMapper articleMapper,
+            ReserveRepository reserveRepository) {
         this.articleRepository = articleRepository;
         this.userService = userService;
         this.articleMapper = articleMapper;
+        this.reserveRepository = reserveRepository;
     }
 
     @Override
@@ -66,8 +74,11 @@ public class ArticleServiceImpl implements ArticleService {
                 savedArticle.getCategory().name(),
                 savedArticle.getState().name(),
                 savedArticle.getImage(),
-                savedArticle.getUserOffers().getIdUser());
-
+                savedArticle.getUserOffers().getIdUser(),
+                savedArticle.getUserOffers().getUserName(),
+                false,
+                null,
+                null);
     }
 
     @Override
@@ -78,15 +89,25 @@ public class ArticleServiceImpl implements ArticleService {
         }
         return article.stream()
                 .sorted(Comparator.comparing(Article::getPublished).reversed())
-                .map(a -> new ArticleCardReponseDTO(
-                        a.getTitle(),
-                        a.getSize(),
-                        a.getPrice(),
-                        a.getCategory(),
-                        a.getState(),
-                        a.getImage(),
-                        a.getPublished(),
-                        a.getUserOffers().getUserName()))
+                .map(a -> {
+                    LocalDateTime expiryDate = reserveRepository
+                            .findByArticleIdArticle(a.getIdArticle())
+                            .map(Reserve::getExpiryDate)
+                            .orElse(null);
+
+                    return new ArticleCardReponseDTO(
+                            a.getIdArticle(),
+                            a.getTitle(),
+                            a.getSize(),
+                            a.getPrice(),
+                            a.getCategory(),
+                            a.getState(),
+                            a.getImage(),
+                            a.getPublished(),
+                            a.getUserOffers().getUserName(),
+                            a.getIsReserved(),
+                            expiryDate);
+                })
                 .toList();
     }
 
@@ -98,19 +119,27 @@ public class ArticleServiceImpl implements ArticleService {
         }
         return articles.stream()
                 .sorted(Comparator.comparing(Article::getPublished).reversed())
-                .map(article -> new ArticleCardReponseDTO(
-                        article.getTitle(),
-                        article.getSize(),
-                        article.getPrice(),
-                        article.getCategory(),
-                        article.getState(),
-                        article.getImage(),
-                        article.getPublished(),
-                        article.getUserOffers().getUserName()))
+                .map(a -> {
+                    LocalDateTime expiryDate = reserveRepository
+                            .findByArticleIdArticle(a.getIdArticle())
+                            .map(Reserve::getExpiryDate)
+                            .orElse(null);
+
+                    return new ArticleCardReponseDTO(
+                            a.getIdArticle(),
+                            a.getTitle(),
+                            a.getSize(),
+                            a.getPrice(),
+                            a.getCategory(),
+                            a.getState(),
+                            a.getImage(),
+                            a.getPublished(),
+                            a.getUserOffers().getUserName(),
+                            a.getIsReserved(),
+                            expiryDate);
+                })
                 .toList();
     }
-    // COLLECTOR
-    // OPTIONAL
 
     @Override
     public List<ArticleCardReponseDTO> findByPublishedRange(PublishedRange range) {
@@ -126,25 +155,39 @@ public class ArticleServiceImpl implements ArticleService {
         }
         ;
 
+        Comparator<Article> comparator = (range == PublishedRange.OLDERS)
+                ? Comparator.comparing(Article::getPublished)
+                : Comparator.comparing(Article::getPublished).reversed();
+
         return articles.stream()
-                .sorted(Comparator.comparing(Article::getPublished).reversed())
-                .map(a -> new ArticleCardReponseDTO(
-                        a.getTitle(),
-                        a.getSize(),
-                        a.getPrice(),
-                        a.getCategory(),
-                        a.getState(),
-                        a.getImage(),
-                        a.getPublished(),
-                        a.getUserOffers().getUserName()))
+                .sorted(comparator)
+                .map(a -> {
+                    LocalDateTime expiryDate = reserveRepository
+                            .findByArticleIdArticle(a.getIdArticle())
+                            .map(Reserve::getExpiryDate)
+                            .orElse(null);
+
+                    return new ArticleCardReponseDTO(
+                            a.getIdArticle(),
+                            a.getTitle(),
+                            a.getSize(),
+                            a.getPrice(),
+                            a.getCategory(),
+                            a.getState(),
+                            a.getImage(),
+                            a.getPublished(),
+                            a.getUserOffers().getUserName(),
+                            a.getIsReserved(),
+                            expiryDate);
+                })
                 .toList();
     }
 
-    // .map mapper??
-
     @Override
     public Page<ArticleCardReponseDTO> getArticlesGallery(Pageable pageable) {
-        Page<Article> articles = articleRepository.findAll(pageable);
+        Page<Article> articles = articleRepository.findAll(
+                PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+                        Sort.by(Sort.Direction.DESC, "published")));
         return articles.map(articleMapper::toCardDTO);
     }
 
@@ -264,5 +307,36 @@ public class ArticleServiceImpl implements ArticleService {
                 updatedArticle.getImage(),
                 updatedArticle.getUserOffers().getIdUser(),
                 updatedArticle.getPublished().toString());
+        }
+        
+    @Override
+    public ArticleResponseDto getById(Integer id) {
+        Article article = articleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Article not found"));
+
+        LocalDateTime expiryDate = reserveRepository
+                .findByArticleIdArticle(id)
+                .map(Reserve::getExpiryDate)
+                .orElse(null);
+
+        Integer reservedByUserId = reserveRepository
+                .findByArticleIdArticle(id)
+                .map(r -> r.getUserWants().getIdUser())
+                .orElse(null);
+
+        return new ArticleResponseDto(
+                article.getIdArticle(),
+                article.getTitle(),
+                article.getDescription(),
+                article.getSize(),
+                article.getPrice(),
+                article.getCategory().name(),
+                article.getState().name(),
+                article.getImage(),
+                article.getUserOffers().getIdUser(),
+                article.getUserOffers().getUserName(),
+                article.getIsReserved(),
+                reservedByUserId,
+                expiryDate);
     }
 }

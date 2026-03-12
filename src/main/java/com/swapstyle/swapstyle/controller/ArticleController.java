@@ -67,7 +67,6 @@ public class ArticleController {
         return new ResponseEntity<>(articles, HttpStatus.OK);
     }
 
-    // paginación de galería
     @GetMapping("/gallery")
     public ResponseEntity<Page<ArticleCardReponseDTO>> getArticlesGallery(
             @PageableDefault(page = 0, size = 30) Pageable pageable) {
@@ -75,13 +74,11 @@ public class ArticleController {
         return ResponseEntity.ok(articles);
     }
 
-    // filtro para categoría
     @GetMapping("/categories")
     public ResponseEntity<Category[]> getCategories() {
         return ResponseEntity.ok(Category.values());
     }
 
-    // articulos que ofrece el usuario (para el armario)
     @GetMapping("/user/{idUser}")
     public ResponseEntity<List<ArticleCardReponseDTO>> getArticlesByUser(@PathVariable Integer idUser) {
         List<ArticleCardReponseDTO> articles = articleService.getArticlesByUser(idUser);
@@ -128,5 +125,11 @@ public class ArticleController {
             @RequestBody ArticleCategoryUpdateDTO dto) {
         ArticleResponseUpdateDetailDTO updated = articleService.updateCategory(id, dto);
         return new ResponseEntity<>(updated, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ArticleResponseDto> getById(@PathVariable Integer id) {
+        ArticleResponseDto article = articleService.getById(id);
+        return new ResponseEntity<>(article, HttpStatus.OK);
     }
 }

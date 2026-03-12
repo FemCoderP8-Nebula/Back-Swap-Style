@@ -20,34 +20,35 @@ import com.swapstyle.swapstyle.entity.enums.PublishedRange;
 
 public interface ArticleService {
 
-public ArticleResponseDto createArticle(ArticleRequestDTO dto, Integer idUser );
+    public ArticleResponseDto createArticle(ArticleRequestDTO dto, Integer idUser);
 
-public List<ArticleCardReponseDTO> getAllArticles();
+    public List<ArticleCardReponseDTO> getAllArticles();
 
-// public Article getDetail ( Integer id);
+    // public Article getDetail ( Integer id);
 
-// public Article deleArticle(Integer id);
+    // public Article deleArticle(Integer id);
 
-// public Article deleteArticle(Integer id);
+    // public Article deleteArticle(Integer id);
 
-public List<ArticleCardReponseDTO> findByCategory(Category category);
+    public List<ArticleCardReponseDTO> findByCategory(Category category);
 
-public List<ArticleCardReponseDTO> findByPublishedRange(PublishedRange range);
+    public List<ArticleCardReponseDTO> findByPublishedRange(PublishedRange range);
 
- public Page<ArticleCardReponseDTO> getArticlesGallery(Pageable pageable);
+    public Page<ArticleCardReponseDTO> getArticlesGallery(Pageable pageable);
 
- public List<ArticleCardReponseDTO> getArticlesByUser(Integer idUser);
+    public List<ArticleCardReponseDTO> getArticlesByUser(Integer idUser);
 
- public ArticleResponseUpdateDetailDTO updateTitle(Integer id, ArticleTitleUpdateDTO dto);
+    public ArticleResponseDto getById(Integer id);
 
-public ArticleResponseUpdateDetailDTO updateDescription(Integer id, ArticleDescriptionUpdateDTO dto);
+    public ArticleResponseUpdateDetailDTO updateTitle(Integer id, ArticleTitleUpdateDTO dto);
 
-public ArticleResponseUpdateDetailDTO updateSize(Integer id, ArticleSizeUpdateDTO dto);
+    public ArticleResponseUpdateDetailDTO updateDescription(Integer id, ArticleDescriptionUpdateDTO dto);
 
-public ArticleResponseUpdateDetailDTO updatePrice(Integer id, ArticlePriceUpdateDTO dto);
+    public ArticleResponseUpdateDetailDTO updateSize(Integer id, ArticleSizeUpdateDTO dto);
 
-public ArticleResponseUpdateDetailDTO updateState(Integer id, ArticleStateUpdateDTO
-     dto);
+    public ArticleResponseUpdateDetailDTO updatePrice(Integer id, ArticlePriceUpdateDTO dto);
 
-public ArticleResponseUpdateDetailDTO updateCategory(Integer id, ArticleCategoryUpdateDTO dto);
+    public ArticleResponseUpdateDetailDTO updateState(Integer id, ArticleStateUpdateDTO dto);
+
+    public ArticleResponseUpdateDetailDTO updateCategory(Integer id, ArticleCategoryUpdateDTO dto);
 }

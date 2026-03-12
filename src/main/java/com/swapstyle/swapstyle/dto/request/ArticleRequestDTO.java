@@ -7,26 +7,19 @@ import jakarta.validation.constraints.NotNull;
 
 public record ArticleRequestDTO(
 
-@NotBlank(message = "Title is required, maximun 50 characters.")
-String title,
+        @NotBlank(message = "Title is required, maximun 50 characters.") String title,
 
-@NotBlank(message = "Description required, maximun 250 characters.")
-String description,
+        @NotBlank(message = "Description required, maximun 250 characters.") String description,
 
-@NotBlank(message = "Size is required")
-String size,
+        @NotBlank(message = "Size is required") String size,
 
-@NotNull(message = "Price is required")
-Double price,
+        @NotNull(message = "Price is required") Double price,
 
-@NotNull(message = "Select a Category")
-Category category,
+        @NotNull(message = "Select a Category") Category category,
 
-@NotNull(message = "Select a state of article")
-State state,
+        @NotNull(message = "Select a state of article") State state,
 
-@NotBlank(message = "Add your photo here.")
-String image
+        @NotBlank(message = "Add your photo here.") String image
 
 ) {
 

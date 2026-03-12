@@ -44,8 +44,9 @@ public class Reserve {
     private Article article;
 
     @PrePersist
-    protected void onCreate(){
-        this.expiryDate = LocalDateTime.now().plusHours(24);
+    protected void onCreate() {
+        // this.expiryDate = LocalDateTime.now().plusHours(24);
+        this.expiryDate = LocalDateTime.now().plusMinutes(2);
     }
 
 }
