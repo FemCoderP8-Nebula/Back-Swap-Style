@@ -1,6 +1,5 @@
 package com.swapstyle.swapstyle.controller;
 
-
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -8,7 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.swapstyle.swapstyle.dto.request.ArticleRequestDTO;
 import com.swapstyle.swapstyle.dto.response.ArticleCardReponseDTO;
 import com.swapstyle.swapstyle.dto.response.ArticleResponseDto;
-// import com.swapstyle.swapstyle.entity.Article;
 import com.swapstyle.swapstyle.entity.enums.Category;
 import com.swapstyle.swapstyle.entity.enums.PublishedRange;
 import com.swapstyle.swapstyle.service.ArticleService;
@@ -24,17 +22,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-// import org.springframework.web.bind.annotation.RequestBody;
-// import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
 @RequestMapping("api/v1/article")
 public class ArticleController {
-   
+
     private final ArticleService articleService;
 
-    public ArticleController(ArticleService articleService){
+    public ArticleController(ArticleService articleService) {
         this.articleService = articleService;
     }
 
@@ -45,7 +41,6 @@ public class ArticleController {
     
     return new ResponseEntity<>(article, HttpStatus.CREATED);
     }
-    
 
     @GetMapping("/articles")
     public ResponseEntity<List<ArticleCardReponseDTO>> getAllArticles() {
@@ -59,34 +54,33 @@ public class ArticleController {
         return new ResponseEntity<>(articles, HttpStatus.OK);
     }
 
-    
     @GetMapping("/articlesByPublishedRange")
     public ResponseEntity<List<ArticleCardReponseDTO>> findByPublishedRange(@RequestParam PublishedRange range) {
         List<ArticleCardReponseDTO> articles = articleService.findByPublishedRange(range);
         return new ResponseEntity<>(articles, HttpStatus.OK);
     }
-    
 
-    //paginación de galería
     @GetMapping("/gallery")
-    public ResponseEntity<Page<ArticleCardReponseDTO>> getArticlesGallery(@PageableDefault(page = 0, size = 30) Pageable pageable) {
+    public ResponseEntity<Page<ArticleCardReponseDTO>> getArticlesGallery(
+            @PageableDefault(page = 0, size = 30) Pageable pageable) {
         Page<ArticleCardReponseDTO> articles = articleService.getArticlesGallery(pageable);
         return ResponseEntity.ok(articles);
     }
 
-    //filtro para categoría
     @GetMapping("/categories")
     public ResponseEntity<Category[]> getCategories() {
         return ResponseEntity.ok(Category.values());
     }
 
-    //articulos que ofrece el usuario (para el armario)
     @GetMapping("/user/{idUser}")
     public ResponseEntity<List<ArticleCardReponseDTO>> getArticlesByUser(@PathVariable Integer idUser) {
-    List<ArticleCardReponseDTO> articles = articleService.getArticlesByUser(idUser);
-    return new ResponseEntity<>(articles, HttpStatus.OK);
+        List<ArticleCardReponseDTO> articles = articleService.getArticlesByUser(idUser);
+        return new ResponseEntity<>(articles, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ArticleResponseDto> getById(@PathVariable Integer id) {
+        ArticleResponseDto article = articleService.getById(id);
+        return new ResponseEntity<>(article, HttpStatus.OK);
+    }
 }
-
-
-}
-

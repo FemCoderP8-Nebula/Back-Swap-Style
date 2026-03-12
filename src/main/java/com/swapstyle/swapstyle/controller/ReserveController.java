@@ -7,8 +7,6 @@ import com.swapstyle.swapstyle.dto.request.ReserveRequestDTO;
 import com.swapstyle.swapstyle.dto.response.ReserveResponseDTO;
 import com.swapstyle.swapstyle.service.ReserveService;
 
-//import jakarta.validation.Valid;
-
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-//import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("api/v1/reserves")

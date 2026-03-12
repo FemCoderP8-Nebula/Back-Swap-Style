@@ -16,19 +16,25 @@ import com.swapstyle.swapstyle.repository.ArticleRepository;
 import com.swapstyle.swapstyle.repository.ReserveRepository;
 import com.swapstyle.swapstyle.repository.UserRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class ReserveServiceImpl implements ReserveService {
 
     private final ReserveRepository reserveRepository;
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
+    private final EmailService emailService;
 
     public ReserveServiceImpl(ReserveRepository reserveRepository,
             ArticleRepository articleRepository,
-            UserRepository userRepository) {
+            UserRepository userRepository,
+            EmailService emailService) {
         this.reserveRepository = reserveRepository;
         this.articleRepository = articleRepository;
         this.userRepository = userRepository;
+        this.emailService = emailService;
     }
 
     @Override
@@ -63,24 +69,30 @@ public class ReserveServiceImpl implements ReserveService {
     @Transactional
     public void clearExpiredReservations() {
         List<Reserve> expired = reserveRepository.findAllByExpiryDateBefore(LocalDateTime.now());
+        if (expired == null || expired.isEmpty())
+            return;
         for (Reserve res : expired) {
             Article art = res.getArticle();
+            emailService.sendExpirationNotification(
+                    res.getUserWants().getEmail(),
+                    art.getUserOffers().getEmail(),
+                    art.getTitle(),
+                    res.getUserWants().getUserName());
             art.setIsReserved(false);
+            art.setReserve(null);
             articleRepository.save(art);
-            reserveRepository.delete(res);
         }
+        reserveRepository.deleteAll(expired);
     }
-
 
     private ReserveResponseDTO mapToResponseDTO(Reserve reserve) {
         return new ReserveResponseDTO(
-            reserve.getIdReserve(),
-            reserve.getReservationDate(),
-            reserve.getExpiryDate(),
-            reserve.getUserWants().getUserName(),
-            reserve.getArticle().getTitle(),
-            reserve.getArticle().getPrice()
-        );
+                reserve.getIdReserve(),
+                reserve.getReservationDate(),
+                reserve.getExpiryDate(),
+                reserve.getUserWants().getUserName(),
+                reserve.getArticle().getTitle(),
+                reserve.getArticle().getPrice());
     }
 
     private void handleCancellation(Reserve reserve, Integer requestingUserId) {
@@ -89,8 +101,16 @@ public class ReserveServiceImpl implements ReserveService {
         }
         Article article = reserve.getArticle();
         article.setIsReserved(false);
-        articleRepository.save(article);
+        article.setReserve(null);
+
         reserveRepository.delete(reserve);
+        articleRepository.save(article);
+
+        emailService.sendCancellationNotification(
+                reserve.getUserWants().getEmail(),
+                article.getUserOffers().getEmail(),
+                article.getTitle(),
+                reserve.getUserWants().getUserName());
     }
 
     private ReserveResponseDTO handleNewReservation(Article article, User user) {
@@ -100,6 +120,11 @@ public class ReserveServiceImpl implements ReserveService {
         newReserve.setArticle(article);
         newReserve.setUserWants(user);
         Reserve saved = reserveRepository.save(newReserve);
+        emailService.sendReservationConfirmation(
+                user.getEmail(),
+                article.getUserOffers().getEmail(),
+                article.getTitle(),
+                user.getUserName());
         return mapToResponseDTO(saved);
     }
 
