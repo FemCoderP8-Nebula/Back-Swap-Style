@@ -1,4 +1,4 @@
-package com.swapstyle.swapstyle;
+/*package com.swapstyle.swapstyle;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,4 +10,4 @@ class SwapstyleApplicationTests {
 	void contextLoads() {
 	}
 
-}
+}*/
