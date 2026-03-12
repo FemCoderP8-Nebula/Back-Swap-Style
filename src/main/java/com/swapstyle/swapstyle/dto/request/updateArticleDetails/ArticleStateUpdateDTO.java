@@ -5,7 +5,7 @@ import com.swapstyle.swapstyle.entity.enums.State;
 import jakarta.validation.constraints.NotNull;
 
 public record ArticleStateUpdateDTO(
-    @NotNull
+    @NotNull(message = "Select a state of article")
     State state
 ) {
 

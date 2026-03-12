@@ -1,5 +1,9 @@
 package com.swapstyle.swapstyle.dto.request.updateArticleDetails;
 
-public record ArticleSizeUpdateDTO() {
+import jakarta.validation.constraints.NotBlank;
+
+public record ArticleSizeUpdateDTO(
+        @NotBlank(message = "Size is required")
+        String size) {
 
 }

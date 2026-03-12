@@ -88,39 +88,44 @@ public class ArticleController {
         return new ResponseEntity<>(articles, HttpStatus.OK);
     }
 
-
     @PatchMapping("/title/{id}")
-    public ResponseEntity<ArticleResponseUpdateDetailDTO> updateTitle(@PathVariable Integer id, @RequestBody ArticleTitleUpdateDTO dto){
+    public ResponseEntity<ArticleResponseUpdateDetailDTO> updateTitle(@PathVariable Integer id,
+            @RequestBody ArticleTitleUpdateDTO dto) {
         ArticleResponseUpdateDetailDTO updated = articleService.updateTitle(id, dto);
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 
     @PatchMapping("/description/{id}")
-    public ResponseEntity<ArticleResponseUpdateDetailDTO> updateDescriptioEntity(@PathVariable Integer id, @RequestBody ArticleDescriptionUpdateDTO dto){
+    public ResponseEntity<ArticleResponseUpdateDetailDTO> updateDescriptioEntity(@PathVariable Integer id,
+            @RequestBody ArticleDescriptionUpdateDTO dto) {
         ArticleResponseUpdateDetailDTO updated = articleService.updateDescription(id, dto);
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 
     @PatchMapping("/size/{id}")
-    public ResponseEntity<ArticleResponseUpdateDetailDTO> updateSize(@PathVariable Integer id, @RequestBody ArticleSizeUpdateDTO dto){
+    public ResponseEntity<ArticleResponseUpdateDetailDTO> updateSize(@PathVariable Integer id,
+            @RequestBody ArticleSizeUpdateDTO dto) {
         ArticleResponseUpdateDetailDTO updated = articleService.updateSize(id, dto);
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 
     @PatchMapping("/price/{id}")
-    public ResponseEntity<ArticleResponseUpdateDetailDTO> updatePrice(@PathVariable Integer id, @RequestBody ArticlePriceUpdateDTO dto){
+    public ResponseEntity<ArticleResponseUpdateDetailDTO> updatePrice(@PathVariable Integer id,
+            @RequestBody ArticlePriceUpdateDTO dto) {
         ArticleResponseUpdateDetailDTO updated = articleService.updatePrice(id, dto);
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 
     @PatchMapping("/state/{id}")
-    public ResponseEntity<ArticleResponseUpdateDetailDTO> updateState(@PathVariable Integer id, @RequestBody ArticleStateUpdateDTO dto){
+    public ResponseEntity<ArticleResponseUpdateDetailDTO> updateState(@PathVariable Integer id,
+            @RequestBody ArticleStateUpdateDTO dto) {
         ArticleResponseUpdateDetailDTO updated = articleService.updateState(id, dto);
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 
     @PatchMapping("/category/{id}")
-    public ResponseEntity<ArticleResponseUpdateDetailDTO> updateCategory(@PathVariable Integer id, @RequestBody ArticleCategoryUpdateDTO dto){
+    public ResponseEntity<ArticleResponseUpdateDetailDTO> updateCategory(@PathVariable Integer id,
+            @RequestBody ArticleCategoryUpdateDTO dto) {
         ArticleResponseUpdateDetailDTO updated = articleService.updateCategory(id, dto);
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }

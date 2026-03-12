@@ -10,12 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.swapstyle.swapstyle.dto.request.ArticleRequestDTO;
-import com.swapstyle.swapstyle.dto.request.updateArticleDetails.ArticleCategoryUpdateDTO;
-import com.swapstyle.swapstyle.dto.request.updateArticleDetails.ArticleDescriptionUpdateDTO;
-import com.swapstyle.swapstyle.dto.request.updateArticleDetails.ArticlePriceUpdateDTO;
-import com.swapstyle.swapstyle.dto.request.updateArticleDetails.ArticleSizeUpdateDTO;
-import com.swapstyle.swapstyle.dto.request.updateArticleDetails.ArticleStateUpdateDTO;
-import com.swapstyle.swapstyle.dto.request.updateArticleDetails.ArticleTitleUpdateDTO;
+import com.swapstyle.swapstyle.dto.request.updateArticleDetails.*;
 import com.swapstyle.swapstyle.entity.Article;
 import com.swapstyle.swapstyle.entity.User;
 import com.swapstyle.swapstyle.repository.ArticleRepository;
@@ -25,8 +20,8 @@ import com.swapstyle.swapstyle.dto.response.ArticleResponseDto;
 import com.swapstyle.swapstyle.dto.response.ArticleResponseUpdateDetailDTO;
 //import java.time.LocalDateTime;
 import com.swapstyle.swapstyle.entity.enums.Category;
-//import com.swapstyle.swapstyle.entity.enums.State;
 import com.swapstyle.swapstyle.entity.enums.PublishedRange;
+import com.swapstyle.swapstyle.entity.enums.State;
 import com.swapstyle.swapstyle.mapper.ArticleMapper;
 
 @Service
@@ -169,13 +164,16 @@ public class ArticleServiceImpl implements ArticleService {
         article.setTitle(dto.title());
         Article updatedArticle = articleRepository.save(article);
         return new ArticleResponseUpdateDetailDTO(
+                updatedArticle.getIdArticle(),
                 updatedArticle.getTitle(),
                 updatedArticle.getDescription(),
                 updatedArticle.getSize(),
                 updatedArticle.getPrice(),
-                updatedArticle.getCategory(),
-                updatedArticle.getState(),
-                updatedArticle.getImage());
+                updatedArticle.getCategory().name(),
+                updatedArticle.getState().name(),
+                updatedArticle.getImage(),
+                updatedArticle.getUserOffers().getIdUser(),
+                updatedArticle.getPublished().toString());
     }
 
     @Override
@@ -184,13 +182,16 @@ public class ArticleServiceImpl implements ArticleService {
         article.setDescription(dto.description());
         Article updatedArticle = articleRepository.save(article);
         return new ArticleResponseUpdateDetailDTO(
+                updatedArticle.getIdArticle(),
                 updatedArticle.getTitle(),
                 updatedArticle.getDescription(),
                 updatedArticle.getSize(),
                 updatedArticle.getPrice(),
-                updatedArticle.getCategory(),
-                updatedArticle.getState(),
-                updatedArticle.getImage());
+                updatedArticle.getCategory().name(),
+                updatedArticle.getState().name(),
+                updatedArticle.getImage(),
+                updatedArticle.getUserOffers().getIdUser(),
+                updatedArticle.getPublished().toString());
     }
 
     @Override
@@ -199,13 +200,16 @@ public class ArticleServiceImpl implements ArticleService {
         article.setSize(dto.size());
         Article updatedArticle = articleRepository.save(article);
         return new ArticleResponseUpdateDetailDTO(
+                updatedArticle.getIdArticle(),
                 updatedArticle.getTitle(),
                 updatedArticle.getDescription(),
                 updatedArticle.getSize(),
                 updatedArticle.getPrice(),
-                updatedArticle.getCategory(),
-                updatedArticle.getState(),
-                updatedArticle.getImage());
+                updatedArticle.getCategory().name(),
+                updatedArticle.getState().name(),
+                updatedArticle.getImage(),
+                updatedArticle.getUserOffers().getIdUser(),
+                updatedArticle.getPublished().toString());
     }
 
     @Override
@@ -214,13 +218,16 @@ public class ArticleServiceImpl implements ArticleService {
         article.setPrice(dto.price());
         Article updatedArticle = articleRepository.save(article);
         return new ArticleResponseUpdateDetailDTO(
+                updatedArticle.getIdArticle(),
                 updatedArticle.getTitle(),
                 updatedArticle.getDescription(),
                 updatedArticle.getSize(),
                 updatedArticle.getPrice(),
-                updatedArticle.getCategory(),
-                updatedArticle.getState(),
-                updatedArticle.getImage());
+                updatedArticle.getCategory().name(),
+                updatedArticle.getState().name(),
+                updatedArticle.getImage(),
+                updatedArticle.getUserOffers().getIdUser(),
+                updatedArticle.getPublished().toString());
     }
 
     @Override
@@ -229,13 +236,16 @@ public class ArticleServiceImpl implements ArticleService {
         article.setState(dto.state());
         Article updatedArticle = articleRepository.save(article);
         return new ArticleResponseUpdateDetailDTO(
+                updatedArticle.getIdArticle(),
                 updatedArticle.getTitle(),
                 updatedArticle.getDescription(),
                 updatedArticle.getSize(),
                 updatedArticle.getPrice(),
-                updatedArticle.getCategory(),
-                updatedArticle.getState(),
-                updatedArticle.getImage());
+                updatedArticle.getCategory().name(),
+                updatedArticle.getState().name(),
+                updatedArticle.getImage(),
+                updatedArticle.getUserOffers().getIdUser(),
+                updatedArticle.getPublished().toString());
     }
 
     @Override
@@ -244,12 +254,15 @@ public class ArticleServiceImpl implements ArticleService {
         article.setCategory(dto.category());
         Article updatedArticle = articleRepository.save(article);
         return new ArticleResponseUpdateDetailDTO(
+                updatedArticle.getIdArticle(),
                 updatedArticle.getTitle(),
                 updatedArticle.getDescription(),
                 updatedArticle.getSize(),
                 updatedArticle.getPrice(),
-                updatedArticle.getCategory(),
-                updatedArticle.getState(),
-                updatedArticle.getImage());
+                updatedArticle.getCategory().name(),
+                updatedArticle.getState().name(),
+                updatedArticle.getImage(),
+                updatedArticle.getUserOffers().getIdUser(),
+                updatedArticle.getPublished().toString());
     }
 }

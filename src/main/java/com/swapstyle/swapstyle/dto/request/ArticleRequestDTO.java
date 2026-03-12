@@ -13,7 +13,7 @@ String title,
 @NotBlank(message = "Description required, maximun 250 characters.")
 String description,
 
- @NotBlank(message = "Size is required")
+@NotBlank(message = "Size is required")
 String size,
 
 @NotNull(message = "Price is required")

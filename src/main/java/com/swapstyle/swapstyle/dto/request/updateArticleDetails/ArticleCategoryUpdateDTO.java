@@ -5,7 +5,7 @@ import com.swapstyle.swapstyle.entity.enums.Category;
 import jakarta.validation.constraints.NotNull;
 
 public record ArticleCategoryUpdateDTO(
-    @NotNull
+    @NotNull(message = "Select a Category")
     Category category
 ) {
 
