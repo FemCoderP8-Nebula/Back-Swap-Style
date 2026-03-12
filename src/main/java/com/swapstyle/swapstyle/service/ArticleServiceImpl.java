@@ -1,5 +1,6 @@
 package com.swapstyle.swapstyle.service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -14,7 +15,6 @@ import com.swapstyle.swapstyle.entity.Article;
 import com.swapstyle.swapstyle.entity.User;
 import com.swapstyle.swapstyle.repository.ArticleRepository;
 
-
 import com.swapstyle.swapstyle.dto.response.ArticleCardReponseDTO;
 import com.swapstyle.swapstyle.dto.response.ArticleResponseDto;
 
@@ -28,22 +28,31 @@ import com.swapstyle.swapstyle.mapper.ArticleMapper;
 public class ArticleServiceImpl implements ArticleService {
 
     private final ArticleRepository articleRepository;
-
     private final UserService userService;
-
+    private final FileUploadService fileUploadService;
     private final ArticleMapper articleMapper;
 
-    public ArticleServiceImpl(ArticleRepository articleRepository, UserService userService,ArticleMapper articleMapper) {
+    public ArticleServiceImpl(ArticleRepository articleRepository, UserService userService, ArticleMapper articleMapper,
+            FileUploadService fileUploadService) {
         this.articleRepository = articleRepository;
         this.userService = userService;
-        this.articleMapper=articleMapper;
+        this.articleMapper = articleMapper;
+        this.fileUploadService = fileUploadService;
     }
 
     @Override
     public ArticleResponseDto createArticle(ArticleRequestDTO dto, Integer idUser) {
 
         User user = userService.getUserById(idUser);
-        
+
+        String fileName;
+        try {
+            fileName = fileUploadService.upload(dto.image());
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error uploading file");
+        }
+
         Article article = new Article();
         article.setTitle(dto.title());
         article.setDescription(dto.description());
@@ -51,21 +60,21 @@ public class ArticleServiceImpl implements ArticleService {
         article.setPrice(dto.price());
         article.setCategory(dto.category());
         article.setState(dto.state());
-        article.setImage(dto.image());
+        article.setImage(fileName);
         article.setUserOffers(user);
 
         Article savedArticle = articleRepository.save(article);
 
         return new ArticleResponseDto(
-        savedArticle.getIdArticle(),
-        savedArticle.getTitle(),
-        savedArticle.getDescription(),
-        savedArticle.getSize(),
-        savedArticle.getPrice(),
-        savedArticle.getCategory().name(),
-        savedArticle.getState().name(),
-        savedArticle.getImage(),
-        savedArticle.getUserOffers().getIdUser());
+                savedArticle.getIdArticle(),
+                savedArticle.getTitle(),
+                savedArticle.getDescription(),
+                savedArticle.getSize(),
+                savedArticle.getPrice(),
+                savedArticle.getCategory().name(),
+                savedArticle.getState().name(),
+                savedArticle.getImage(),
+                savedArticle.getUserOffers().getIdUser());
 
     }
 
@@ -105,7 +114,8 @@ public class ArticleServiceImpl implements ArticleService {
                         article.getState(),
                         article.getImage(),
                         article.getPublished(),
-                        article.getUserOffers().getUserName()))
+                        article.getUserOffers().getUserName(),
+                        article.getIsReserved()))
                 .toList();
     }
     // COLLECTOR
@@ -125,8 +135,13 @@ public class ArticleServiceImpl implements ArticleService {
         }
         ;
 
+        Comparator<Article> comparator = (range == PublishedRange.OLDERS)
+                ? Comparator.comparing(Article::getPublished)
+                : Comparator.comparing(Article::getPublished).reversed();
+
         return articles.stream()
-                .sorted(Comparator.comparing(Article::getPublished).reversed())
+                // .sorted(Comparator.comparing(Article::getPublished).reversed())
+                .sorted(comparator)
                 .map(a -> new ArticleCardReponseDTO(
                         a.getTitle(),
                         a.getSize(),
@@ -141,19 +156,19 @@ public class ArticleServiceImpl implements ArticleService {
 
     // .map mapper??
 
-
     @Override
     public Page<ArticleCardReponseDTO> getArticlesGallery(Pageable pageable) {
-        Page<Article> articles = articleRepository.findAll(pageable);
+        Page<Article> articles = articleRepository.findAll(
+                PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+                        Sort.by(Sort.Direction.DESC, "published")));
         return articles.map(articleMapper::toCardDTO);
     }
 
     @Override
-     public List<ArticleCardReponseDTO> getArticlesByUser(Integer idUser) {
-    List<Article> articles = articleRepository.findByUserOffers_IdUser(idUser);
-    return articles.stream()
-        .map(article -> articleMapper.toCardDTO(article))
-        .collect(Collectors.toList());
+    public List<ArticleCardReponseDTO> getArticlesByUser(Integer idUser) {
+        List<Article> articles = articleRepository.findByUserOffers_IdUser(idUser);
+        return articles.stream()
+                .map(article -> articleMapper.toCardDTO(article))
+                .collect(Collectors.toList());
+    }
 }
-}
-

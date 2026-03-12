@@ -1,5 +1,7 @@
 package com.swapstyle.swapstyle.dto.request;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.swapstyle.swapstyle.entity.enums.Category;
 import com.swapstyle.swapstyle.entity.enums.State;
 import jakarta.validation.constraints.NotBlank;
@@ -25,9 +27,8 @@ Category category,
 @NotNull(message = "Select a state of article")
 State state,
 
-@NotBlank(message = "Add your photo here.")
-String image
-
+@NotNull(message = "Add your photo here.")
+MultipartFile image
 ) {
 
 }

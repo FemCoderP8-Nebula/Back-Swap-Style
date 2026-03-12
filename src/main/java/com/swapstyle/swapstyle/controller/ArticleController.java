@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.swapstyle.swapstyle.dto.request.ArticleRequestDTO;
 import com.swapstyle.swapstyle.dto.response.ArticleCardReponseDTO;
 import com.swapstyle.swapstyle.dto.response.ArticleResponseDto;
-import com.swapstyle.swapstyle.entity.Article;
+// import com.swapstyle.swapstyle.entity.Article;
 import com.swapstyle.swapstyle.entity.enums.Category;
 import com.swapstyle.swapstyle.entity.enums.PublishedRange;
 import com.swapstyle.swapstyle.service.ArticleService;
@@ -21,10 +21,11 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+// import org.springframework.web.bind.annotation.RequestBody;
+// import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
@@ -38,9 +39,10 @@ public class ArticleController {
     }
 
     @PostMapping("/add/{idUser}")
-    public ResponseEntity<ArticleResponseDto> createArticle(@RequestBody ArticleRequestDTO dto, @PathVariable Integer idUser) {
+    public ResponseEntity<ArticleResponseDto> createArticle(@ModelAttribute ArticleRequestDTO dto, @PathVariable Integer idUser){
     ArticleResponseDto article = articleService.createArticle(dto, idUser);
         
+    
     return new ResponseEntity<>(article, HttpStatus.CREATED);
     }
     
