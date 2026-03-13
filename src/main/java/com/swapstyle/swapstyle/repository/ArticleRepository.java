@@ -9,6 +9,7 @@ import java.util.List;
 import com.swapstyle.swapstyle.entity.enums.Category;
 
 public interface ArticleRepository extends JpaRepository<Article, Integer> {
+    
     List<Article> findByCategory(Category category);
 
     List<Article> findByPublishedAfter(LocalDateTime date);
