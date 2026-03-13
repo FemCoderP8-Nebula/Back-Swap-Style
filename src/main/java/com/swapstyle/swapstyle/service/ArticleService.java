@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import com.swapstyle.swapstyle.dto.request.ArticleRequestDTO;
 import com.swapstyle.swapstyle.dto.request.updateArticleDetails.ArticleCategoryUpdateDTO;
 import com.swapstyle.swapstyle.dto.request.updateArticleDetails.ArticleDescriptionUpdateDTO;
+import com.swapstyle.swapstyle.dto.request.updateArticleDetails.ArticleImageUpdateDTO;
 import com.swapstyle.swapstyle.dto.request.updateArticleDetails.ArticlePriceUpdateDTO;
 import com.swapstyle.swapstyle.dto.request.updateArticleDetails.ArticleSizeUpdateDTO;
 import com.swapstyle.swapstyle.dto.request.updateArticleDetails.ArticleStateUpdateDTO;
@@ -51,4 +52,6 @@ public interface ArticleService {
     public ArticleResponseUpdateDetailDTO updateState(Integer id, ArticleStateUpdateDTO dto);
 
     public ArticleResponseUpdateDetailDTO updateCategory(Integer id, ArticleCategoryUpdateDTO dto);
+
+    public ArticleResponseUpdateDetailDTO updateImage(Integer idArticle, ArticleImageUpdateDTO image);
 }

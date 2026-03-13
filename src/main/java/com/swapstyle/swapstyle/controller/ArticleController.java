@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.swapstyle.swapstyle.dto.request.ArticleRequestDTO;
 import com.swapstyle.swapstyle.dto.request.updateArticleDetails.ArticleCategoryUpdateDTO;
 import com.swapstyle.swapstyle.dto.request.updateArticleDetails.ArticleDescriptionUpdateDTO;
+import com.swapstyle.swapstyle.dto.request.updateArticleDetails.ArticleImageUpdateDTO;
 import com.swapstyle.swapstyle.dto.request.updateArticleDetails.ArticlePriceUpdateDTO;
 import com.swapstyle.swapstyle.dto.request.updateArticleDetails.ArticleSizeUpdateDTO;
 import com.swapstyle.swapstyle.dto.request.updateArticleDetails.ArticleStateUpdateDTO;
@@ -32,7 +33,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
 @RestController
 @RequestMapping("api/v1/article")
 public class ArticleController {
@@ -44,11 +44,10 @@ public class ArticleController {
     }
 
     @PostMapping("/add/{idUser}")
-    public ResponseEntity<ArticleResponseDto> createArticle(@ModelAttribute ArticleRequestDTO dto, @PathVariable Integer idUser){
-    ArticleResponseDto article = articleService.createArticle(dto, idUser);
-        
-    
-    return new ResponseEntity<>(article, HttpStatus.CREATED);
+    public ResponseEntity<ArticleResponseDto> createArticle(@ModelAttribute ArticleRequestDTO dto,
+            @PathVariable Integer idUser) {
+        ArticleResponseDto article = articleService.createArticle(dto, idUser);
+        return new ResponseEntity<>(article, HttpStatus.CREATED);
     }
 
     @GetMapping("/articles")
@@ -126,6 +125,12 @@ public class ArticleController {
     public ResponseEntity<ArticleResponseUpdateDetailDTO> updateCategory(@PathVariable Integer id,
             @RequestBody ArticleCategoryUpdateDTO dto) {
         ArticleResponseUpdateDetailDTO updated = articleService.updateCategory(id, dto);
+        return new ResponseEntity<>(updated, HttpStatus.OK);
+    }
+
+    @PatchMapping("/image/{id}")
+    public ResponseEntity<ArticleResponseUpdateDetailDTO> updateImage(@PathVariable Integer id, @ModelAttribute ArticleImageUpdateDTO dto) {
+        ArticleResponseUpdateDetailDTO updated = articleService.updateImage(id, dto);
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 
